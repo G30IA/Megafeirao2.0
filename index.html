@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G30 Script Studio | Mega Feirão</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,600;0,700;0,900;1,800&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: radial-gradient(circle at 50% 20%, #133325 0%, #050b08 100%); 
+            background-attachment: fixed;
+            scroll-behavior: smooth; 
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+        .script-card { transition: all 0.3s ease; }
+        .teleprompter-text { font-size: 2rem; line-height: 1.4; color: white; background: black; padding: 2rem; border-radius: 8px; }
+        /* Scrollbar hiding for clean UI */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Custom styles for tabs */
+        .tab-content { display: none; opacity: 0; transition: opacity 0.3s ease; }
+        .tab-content.active { display: block; opacity: 1; }
+    </style>
+</head>
+<body class="text-slate-100 antialiased">
+
+    <!-- Navigation / Header -->
+    <header class="bg-[#050b08]/95 backdrop-blur shadow-lg sticky top-0 z-50 border-b border-[#1a382a]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('main')">
+                <img src="https://raw.githubusercontent.com/G30IA/g30-summit-dashboard/44186b90d876cbf1a86191c78bf3ff02c34299cd/G30logonova" alt="G30 Logo" class="h-10 w-auto object-contain" onerror="this.outerHTML='<div class=&quot;w-10 h-10 bg-orange-500 rounded flex items-center justify-center text-white font-black italic&quot;>G30</div>'">
+                <div class="flex flex-col justify-center">
+                    <span class="text-[10px] text-slate-400 uppercase tracking-[0.2em] mb-0.5">Com o apoio Santander Financiamentos, a G30 I.A:</span>
+                    <h1 class="text-xl md:text-2xl font-black tracking-tight text-white uppercase italic leading-none hover:text-orange-400 transition">Mega Feirão <span class="text-orange-500">G30</span></h1>
+                </div>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <nav class="hidden xl:flex space-x-2 items-center">
+                <button onclick="switchTab('main')" id="nav-feirao" class="nav-btn text-orange-500 px-3 py-2 text-sm font-bold uppercase tracking-wider transition">O Feirão</button>
+                <div class="w-px h-4 bg-[#1a382a] mx-2"></div>
+                
+                <button onclick="switchTab('calendario')" id="nav-calendario" class="nav-btn text-slate-400 hover:text-orange-400 bg-transparent border border-transparent px-4 py-2 rounded-md text-sm font-bold uppercase tracking-wide transition flex items-center gap-2">
+                    <span>📅 Calendário</span>
+                </button>
+                <div class="w-px h-4 bg-[#1a382a] mx-2"></div>
+
+                <button onclick="switchTab('trafego')" id="nav-trafego" class="nav-btn text-slate-400 hover:text-orange-400 bg-transparent border border-transparent px-4 py-2 rounded-md text-sm font-bold uppercase tracking-wide transition flex items-center gap-2">
+                    <span>🚀 Tráfego Pago</span>
+                </button>
+                <div class="w-px h-4 bg-[#1a382a] mx-2"></div>
+
+                <button onclick="switchTab('presales')" id="nav-prevendas" class="nav-btn text-slate-400 hover:text-orange-400 bg-[#133325] border border-[#1a382a] px-4 py-2 rounded-md text-sm font-bold uppercase tracking-wide transition shadow-lg flex items-center gap-2">
+                    <span>📞 Pré-Vendas & MAPA</span>
+                </button>
+            </nav>
+
+            <!-- Mobile Menu Toggle -->
+            <div class="xl:hidden flex items-center gap-2 overflow-x-auto no-scrollbar w-1/2 justify-end">
+                 <button onclick="switchTab('main')" class="bg-orange-600 text-white px-3 py-2 rounded-md text-[10px] font-bold uppercase shrink-0">Feirão</button>
+                 <button onclick="switchTab('calendario')" class="bg-[#133325] text-white px-3 py-2 rounded-md text-[10px] font-bold uppercase border border-[#1a382a] shrink-0">Calendário</button>
+                 <button onclick="switchTab('trafego')" class="bg-[#133325] text-white px-3 py-2 rounded-md text-[10px] font-bold uppercase border border-[#1a382a] shrink-0">Tráfego</button>
+                 <button onclick="switchTab('presales')" class="bg-[#133325] text-white px-3 py-2 rounded-md text-[10px] font-bold uppercase border border-[#1a382a] shrink-0">Pré-Vendas</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- ========================================== -->
+        <!-- TAB 1: O FEIRÃO (Estratégia e Roteiros)    -->
+        <!-- ========================================== -->
+        <div id="tab-main" class="tab-content active space-y-20">
+            
+            <section class="text-center max-w-5xl mx-auto py-6">
+                <h2 class="text-4xl md:text-6xl font-black text-white uppercase italic tracking-tighter drop-shadow-lg leading-tight">
+                    Prepare-se para bater <br/>todos os recordes de <span class="text-orange-500">VENDAS!</span>
+                </h2>
+                <p class="mt-4 text-lg text-slate-400 max-w-2xl mx-auto mb-10">
+                    O hub oficial do 2º Mega Feirão G30. Acesse as estratégias validadas para gerar tráfego massivo e explodir as vendas da sua loja.
+                </p>
+                
+                <!-- Banner Image -->
+                <div class="relative w-full rounded-3xl overflow-hidden shadow-[0_0_40px_rgba(234,88,12,0.15)] border border-orange-500/30 group">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#050b08] via-transparent to-transparent opacity-60 z-10 pointer-events-none"></div>
+                    <img src="https://raw.githubusercontent.com/G30IA/Megafeirao2.0/4a1b24731ce26bf4c7680dd1e1c4570130c3875d/6%20(1).png" alt="Banner Mega Feirão 2.0" class="w-full h-auto object-cover transform group-hover:scale-[1.02] transition duration-500 relative z-0">
+                </div>
+            </section>
+
+            <!-- O Desafio Section -->
+            <section class="max-w-4xl mx-auto -mt-10">
+                <div class="bg-[#050b08] border border-orange-500/30 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
+                    <div class="absolute -top-24 -right-24 w-64 h-64 bg-orange-600/10 blur-[80px] rounded-full pointer-events-none"></div>
+
+                    <div class="text-center mb-10 relative z-10">
+                        <span class="bg-orange-600 text-white text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest inline-block mb-6 shadow-lg">O Desafio</span>
+                        <h3 class="text-4xl md:text-5xl font-black text-orange-500 uppercase italic tracking-tighter leading-tight">
+                            Vender de 9 a 17 carros <br/>
+                            <span class="text-white">em apenas 3 dias</span>
+                        </h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+                        <div class="bg-[#0a1812] border border-[#1a382a] rounded-2xl p-6 flex items-center gap-5 hover:border-orange-500/50 transition duration-300">
+                            <div class="bg-gradient-to-br from-orange-500 to-orange-700 w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow-lg border border-orange-400/30">📅</div>
+                            <div>
+                                <h4 class="text-orange-500 font-black uppercase tracking-widest text-sm mb-1">Quando?</h4>
+                                <p class="text-white font-bold text-xl leading-none">25, 26 e 27<br/><span class="text-base text-slate-300 font-normal">de Junho</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-[#0a1812] border border-[#1a382a] rounded-2xl p-6 flex items-center gap-5 hover:border-orange-500/50 transition duration-300">
+                            <div class="bg-gradient-to-br from-blue-600 to-indigo-800 w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow-lg border border-blue-400/30">🏆</div>
+                            <div>
+                                <h4 class="text-orange-500 font-black uppercase tracking-widest text-sm mb-1">Pra Quem</h4>
+                                <p class="text-slate-300 text-sm leading-tight">Exclusivo para<br/><strong class="text-white text-xl">200 lojas G30</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- O Pacote Completo Section -->
+            <section id="pacote" class="max-w-4xl mx-auto pt-24 -mt-24">
+                <div class="bg-[#050b08] border border-[#1a382a] rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
+                    <div class="absolute -bottom-32 -left-32 w-80 h-80 bg-orange-600/5 blur-[100px] rounded-full pointer-events-none"></div>
+                    
+                    <div class="text-center mb-10 relative z-10">
+                        <span class="bg-red-600 text-white text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest inline-block mb-4 shadow-lg"> MEGA FEIRÃO G30! 🚨</span>
+                        <h3 class="text-4xl md:text-5xl font-black text-orange-500 uppercase italic tracking-tighter leading-none mb-4 drop-shadow-md">
+                            2º Mega Feirão G30 <br/><span class="text-3xl text-white">com Banco Santander</span>
+                        </h3>
+                        <p class="text-slate-300 text-lg md:text-xl font-medium max-w-2xl mx-auto">
+                            Nos dias 25, 26 e 27 de Junho vai rolar o evento, e a sua participação vai sair <strong class="text-emerald-400">totalmente de graça!</strong>
+                        </p>
+                    </div>
+
+                    <!-- Condições Box -->
+                    <div class="bg-gradient-to-r from-[#1a0c0c] to-[#0a1812] border border-orange-500/30 rounded-2xl p-6 md:p-8 mb-10 relative z-10 shadow-lg">
+                        <h4 class="text-2xl font-black text-white italic tracking-tight mb-4 flex items-center gap-2">
+                            💰 Como garantir sua vaga grátis?
+                        </h4>
+                        <p class="text-slate-300 mb-6 text-sm md:text-base">
+                            O custo do Feirão é de <span class="line-through text-red-400">R$ 1.800</span>, mas o <strong class="text-white">Santander e a G30 pagam para você.</strong>
+                        </p>
+                        
+                        <div class="bg-[#050b08] border border-[#1a382a] rounded-xl p-5 border-l-4 border-l-orange-500">
+                            <p class="text-orange-400 font-bold mb-2 uppercase tracking-wide text-sm">A única condição: Usar a maquininha G30 Pay.</p>
+                            <p class="text-slate-300 text-sm leading-relaxed">
+                                <strong class="text-white">Mensalidade Zero:</strong> A mensalidade de R$ 157 será 100% ZERADA. Geralmente a isenção exige um faturamento mínimo de R$ 30 mil, mas para o Feirão <strong class="text-emerald-400">não haverá valor mínimo</strong>, você só precisa usar a maquininha!
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- O Combo List -->
+                    <div class="relative z-10">
+                        <h4 class="text-xl font-black text-white uppercase tracking-widest mb-6 border-b border-[#1a382a] pb-3">📦 O que você leva no Combo:</h4>
+                        
+                        <div class="space-y-4 max-w-3xl mx-auto">
+                            <div class="bg-[#0a1812] border border-orange-500/50 rounded-2xl p-5 flex items-start gap-4 transform transition hover:scale-[1.02] hover:border-orange-400 hover:shadow-[0_0_20px_rgba(234,88,12,0.15)]">
+                                <span class="text-2xl">📋</span>
+                                <p class="text-slate-300 text-sm md:text-base leading-relaxed mt-1"><strong class="text-white font-black tracking-wide">Planejamento:</strong> Estruturado passo a passo para o Feirão.</p>
+                            </div>
+                            <div class="bg-[#0a1812] border border-orange-500/50 rounded-2xl p-5 flex items-start gap-4 transform transition hover:scale-[1.02] hover:border-orange-400 hover:shadow-[0_0_20px_rgba(234,88,12,0.15)]">
+                                <span class="text-2xl">🤖</span>
+                                <p class="text-slate-300 text-sm md:text-base leading-relaxed mt-1"><strong class="text-white font-black tracking-wide">Pacote de ferramentas de I.A:</strong> Leadway com o Tráfego pago, Gideão no Seu Whatsapp analisando seu anúncio, trazendo estratégia e avaliação de leads.</p>
+                            </div>
+                            <div class="bg-[#0a1812] border border-orange-500/50 rounded-2xl p-5 flex items-start gap-4 transform transition hover:scale-[1.02] hover:border-orange-400 hover:shadow-[0_0_20px_rgba(234,88,12,0.15)]">
+                                <span class="text-2xl">🧢</span>
+                                <p class="text-slate-300 text-sm md:text-base leading-relaxed mt-1"><strong class="text-white font-black tracking-wide">Kit Feirão Oficial:</strong> Camiseta e boné exclusivos.</p>
+                            </div>
+                            <div class="bg-[#0a1812] border border-orange-500/50 rounded-2xl p-5 flex items-start gap-4 transform transition hover:scale-[1.02] hover:border-orange-400 hover:shadow-[0_0_20px_rgba(234,88,12,0.15)]">
+                                <span class="text-2xl">💳</span>
+                                <p class="text-slate-300 text-sm md:text-base leading-relaxed mt-1"><strong class="text-white font-black tracking-wide">Maquininha G30 Pay:</strong> Parcele a entrada do seu cliente em até 24x.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Final CTA -->
+                    <div class="mt-12 text-center relative z-10">
+                        <p class="text-xl md:text-2xl text-white font-black italic mb-6 tracking-tight">
+                            Santander financia, G30 Pay parcela a entrada e <span class="text-orange-500">você vende como nunca! ⚡</span>
+                        </p>
+                        <a href="https://forms.gle/zGzhtkD9Szuy1rwm8" target="_blank" rel="noopener noreferrer" class="inline-block bg-orange-600 hover:bg-orange-500 text-white font-black text-lg md:text-xl uppercase tracking-wider py-4 px-8 md:px-12 rounded-full shadow-[0_0_30px_rgba(234,88,12,0.5)] transition-all transform hover:scale-105 border border-orange-400">
+                            ⚠️ Garanta sua vaga agora
+                        </a>
+                        <p class="text-slate-500 text-xs uppercase tracking-widest mt-4">👇 Clique no botão acima para preencher o formulário</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Roteiros -->
+            <section id="informativo" class="space-y-8 pt-24 -mt-24">
+                <div class="border-b border-[#1a382a] pb-4 mb-8">
+                    <h3 class="text-3xl font-black text-white uppercase italic">Roteiros para Vídeos de Vendas</h3>
+                    <p class="text-slate-400 mt-2 text-lg">Escolha o modelo e abra o teleprompter para gravar (Fundo de Funil).</p>
+                </div>
+                
+                <!-- NOVOS FILTROS -->
+                <div class="flex flex-wrap gap-3 justify-center md:justify-start mb-6" id="scriptFilters">
+                    <button onclick="filterScripts('Todos')" class="filter-btn active bg-orange-600 text-white px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider transition-all">Todos</button>
+                    <button onclick="filterScripts('Urgência')" class="filter-btn bg-[#133325] hover:bg-[#1a382a] text-slate-300 border border-[#1a382a] px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all">🔥 Urgência</button>
+                    <button onclick="filterScripts('Hatch')" class="filter-btn bg-[#133325] hover:bg-[#1a382a] text-slate-300 border border-[#1a382a] px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all">Hatch</button>
+                    <button onclick="filterScripts('SUV')" class="filter-btn bg-[#133325] hover:bg-[#1a382a] text-slate-300 border border-[#1a382a] px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all">SUV</button>
+                    <button onclick="filterScripts('Sedan')" class="filter-btn bg-[#133325] hover:bg-[#1a382a] text-slate-300 border border-[#1a382a] px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all">Sedan</button>
+                    <button onclick="filterScripts('Pickup')" class="filter-btn bg-[#133325] hover:bg-[#1a382a] text-slate-300 border border-[#1a382a] px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all">Pickup</button>
+                </div>
+
+                <div id="allScriptsContainer" class="space-y-8"></div>
+            </section>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: CALENDÁRIO (TIMELINE VISUAL)        -->
+        <!-- ========================================== -->
+        <div id="tab-calendario" class="tab-content space-y-16">
+            
+            <section class="text-center max-w-4xl mx-auto py-6">
+                <h2 class="text-4xl md:text-6xl font-black text-white uppercase italic tracking-tighter drop-shadow-lg leading-tight">
+                    Cronograma <span class="text-orange-500">Oficial</span>
+                </h2>
+                <p class="mt-4 text-lg text-slate-400 max-w-2xl mx-auto">
+                    O mapa do tempo exato para preparar, gerir e vender. Siga o fluxo de acompanhamento para garantir o sucesso da sua loja.
+                </p>
+            </section>
+
+            <!-- Calendário Timeline (Fluxograma Atualizado) -->
+            <section class="max-w-6xl mx-auto pb-12">
+                <div class="bg-[#0a1812] border border-[#1a382a] rounded-3xl p-8 md:p-14 shadow-2xl relative overflow-hidden">
+                    <div class="absolute -top-32 -left-32 w-96 h-96 bg-emerald-600/10 blur-[100px] rounded-full pointer-events-none"></div>
+                    
+                    <div class="relative z-10 flex flex-col gap-6 md:gap-10">
+                        
+                        <!-- Linha conectora -->
+                        <div class="hidden md:block absolute left-[86px] top-10 bottom-10 w-1 bg-[#1a382a] z-0"></div>
+
+                        <!-- BLOCO 1: Planejamento -->
+                        <div class="flex flex-col md:flex-row gap-6 items-start relative z-10 group">
+                            <div class="bg-[#050b08] border-4 border-[#1a382a] group-hover:border-emerald-500 rounded-2xl w-full md:w-44 h-auto md:h-24 flex flex-col items-center justify-center shrink-0 shadow-lg z-10 transition duration-300 py-4 md:py-0">
+                                <span class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">18:30hs</span>
+                                <span class="text-emerald-400 font-black text-xl leading-none">08/Jun</span>
+                            </div>
+                            <div class="bg-[#133325] border border-[#1a382a] flex-1 rounded-2xl p-6 shadow-lg border-l-4 border-l-emerald-500 transform transition duration-300 group-hover:scale-[1.01]">
+                                <h4 class="text-xl font-black text-white uppercase tracking-wide mb-2">Planejamento (Guga)</h4>
+                                <p class="text-slate-300 text-sm leading-relaxed">Definição de metas, alinhamento de processos e kick-off oficial da operação Mega Feirão.</p>
+                            </div>
+                        </div>
+
+                        <!-- BLOCO 2: Conteúdos -->
+                        <div class="flex flex-col md:flex-row gap-6 items-start relative z-10 group">
+                            <div class="bg-[#050b08] border-4 border-[#1a382a] group-hover:border-cyan-500 rounded-2xl w-full md:w-44 h-auto md:h-24 flex flex-col items-center justify-center shrink-0 shadow-lg z-10 transition duration-300 py-4 md:py-0">
+                                <span class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">11:00hs</span>
+                                <span class="text-cyan-400 font-black text-xl leading-none">10/Jun</span>
+                            </div>
+                            <div class="bg-[#133325] border border-[#1a382a] flex-1 rounded-2xl p-6 shadow-lg border-l-4 border-l-cyan-500 transform transition duration-300 group-hover:scale-[1.01]">
+                                <h4 class="text-xl font-black text-white uppercase tracking-wide mb-2">Criação de Conteúdos para o Feirão</h4>
+                                <p class="text-slate-300 text-sm leading-relaxed">Com Carol e Daniel. Hora de produzir as provas sociais e vídeos institucionais seguindo os scripts.</p>
+                            </div>
+                        </div>
+
+                        <!-- BLOCO 3: Tráfego -->
+                        <div class="flex flex-col md:flex-row gap-6 items-start relative z-10 group">
+                            <div class="bg-[#111111] border-4 border-[#1a382a] group-hover:border-pink-500 rounded-2xl w-full md:w-44 h-auto md:h-24 flex flex-col items-center justify-center shrink-0 shadow-lg z-10 transition duration-300 py-4 md:py-0">
+                                <span class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">10:00hs</span>
+                                <span class="text-pink-400 font-black text-xl leading-none">12/Jun</span>
+                            </div>
+                            <div class="bg-[#050b08] border border-[#1a382a] flex-1 rounded-2xl p-6 shadow-lg border-l-4 border-l-pink-500 transform transition duration-300 group-hover:scale-[1.01]">
+                                <h4 class="text-xl font-black text-white uppercase tracking-wide mb-2">Tráfego - Captação de Leads (Wirley)</h4>
+                                <p class="text-slate-300 text-sm leading-relaxed">Com Wirley. Lançamento das campanhas para o Feirão no Meta ADS. Foco em encher a lista.</p>
+                            </div>
+                        </div>
+
+                        <!-- BLOCO 4: Gestão -->
+                        <div class="flex flex-col md:flex-row gap-6 items-start relative z-10 group">
+                            <div class="bg-[#111111] border-4 border-[#1a382a] group-hover:border-teal-500 rounded-2xl w-full md:w-44 h-auto md:h-24 flex flex-col items-center justify-center shrink-0 shadow-lg z-10 transition duration-300 py-4 md:py-0">
+                                <span class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">10:00hs</span>
+                                <span class="text-teal-400 font-black text-xl leading-none">15/Jun</span>
+                            </div>
+                            <div class="bg-[#050b08] border border-[#1a382a] flex-1 rounded-2xl p-6 shadow-lg border-l-4 border-l-teal-500 transform transition duration-300 group-hover:scale-[1.01]">
+                                <h4 class="text-xl font-black text-white uppercase tracking-wide mb-2">Gestão de Equipe e Preparação</h4>
+                                <p class="text-slate-300 text-sm leading-relaxed">Com Guga. Alinhamento e preparação dedicada aos Gestores.</p>
+                            </div>
+                        </div>
+
+                        <!-- BLOCO 5: Sessão Extra -->
+                        <div class="flex flex-col md:flex-row gap-6 items-start relative z-10 group">
+                            <div class="bg-[#111111] border-4 border-[#1a382a] group-hover:border-orange-500 rounded-2xl w-full md:w-44 h-auto md:h-24 flex flex-col items-center justify-center shrink-0 shadow-lg z-10 transition duration-300 py-4 md:py-0">
+                                <span class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">08:00hs</span>
+                                <span class="text-orange-400 font-black text-xl leading-none">17/Jun</span>
+                            </div>
+                            <div class="bg-[#050b08] border border-[#1a382a] flex-1 rounded-2xl p-6 shadow-lg border-l-4 border-l-orange-500 transform transition duration-300 group-hover:scale-[1.01]">
+                                <h4 class="text-xl font-black text-white uppercase tracking-wide mb-2">Sessão Extra de Análise de Tráfego</h4>
+                                <p class="text-slate-300 text-sm leading-relaxed">Otimização geral: Tudo sobre tráfego pago para o lançamento.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- BLOCO 6: Análise -->
+                        <div class="flex flex-col md:flex-row gap-6 items-start relative z-10 group">
+                            <div class="bg-[#111111] border-4 border-[#1a382a] group-hover:border-yellow-500 rounded-2xl w-full md:w-44 h-auto md:h-24 flex flex-col items-center justify-center shrink-0 shadow-lg z-10 transition duration-300 py-4 md:py-0">
+                                <span class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">08:00hs</span>
+                                <span class="text-yellow-400 font-black text-xl leading-none">18/Jun</span>
+                            </div>
+                            <div class="bg-[#050b08] border border-[#1a382a] flex-1 rounded-2xl p-6 shadow-lg border-l-4 border-l-yellow-500 transform transition duration-300 group-hover:scale-[1.01]">
+                                <h4 class="text-xl font-black text-white uppercase tracking-wide mb-2">Análise de Criativos e Campanhas</h4>
+                                <p class="text-slate-300 text-sm leading-relaxed">Otimização fina: manter o que performa e ajustar rotas no Tráfego.</p>
+                            </div>
+                        </div>
+
+                        <!-- BLOCO 7: Treinamento -->
+                        <div class="flex flex-col md:flex-row gap-6 items-start relative z-10 group">
+                            <div class="bg-[#111111] border-4 border-[#1a382a] group-hover:border-blue-400 rounded-2xl w-full md:w-44 h-auto md:h-24 flex flex-col items-center justify-center shrink-0 shadow-lg z-10 transition duration-300 py-4 md:py-0">
+                                <span class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">19:30hs</span>
+                                <span class="text-blue-400 font-black text-xl leading-none">22/Jun</span>
+                            </div>
+                            <div class="bg-[#050b08] border border-[#1a382a] flex-1 rounded-2xl p-6 shadow-lg border-l-4 border-l-blue-400 transform transition duration-300 group-hover:scale-[1.01]">
+                                <h4 class="text-xl font-black text-white uppercase tracking-wide mb-2">Treinamento de Lives</h4>
+                                <p class="text-slate-300 text-sm leading-relaxed">Capacitação para o evento do dia 24. Como conduzir a audiência e converter.</p>
+                            </div>
+                        </div>
+
+                        <!-- BLOCO 8: Sala de Guerra -->
+                        <div class="flex flex-col md:flex-row gap-6 items-start relative z-10 group">
+                            <div class="bg-[#111111] border-4 border-[#1a382a] group-hover:border-red-500 rounded-2xl w-full md:w-44 h-auto md:h-24 flex flex-col items-center justify-center shrink-0 shadow-lg z-10 transition duration-300 py-4 md:py-0">
+                                <span class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">Foco Total</span>
+                                <span class="text-red-500 font-black text-xl leading-none">23 e 24</span>
+                            </div>
+                            <div class="bg-gradient-to-r from-[#1a0f0f] to-[#3b0a0a] border border-red-500/50 flex-1 rounded-2xl p-6 shadow-lg border-l-4 border-l-red-600 transform transition duration-300 group-hover:scale-[1.01]">
+                                <h4 class="text-xl font-black text-white uppercase tracking-wide mb-2">Sala de Guerra</h4>
+                                <p class="text-slate-300 text-sm leading-relaxed">Operação máxima antes da Live. Estratégia de combate e alinhamento final.</p>
+                            </div>
+                        </div>
+
+                        <!-- BLOCO 9: LIVE -->
+                        <div class="flex flex-col md:flex-row gap-6 items-start relative z-10 group">
+                            <div class="bg-gradient-to-br from-orange-600 to-orange-800 border-4 border-[#0a1812] rounded-2xl w-full md:w-44 h-auto md:h-24 flex flex-col items-center justify-center shrink-0 shadow-lg z-10 py-4 md:py-0">
+                                <span class="text-orange-200 text-[10px] font-black uppercase tracking-widest mb-1">19:30hs</span>
+                                <span class="text-white font-black text-xl leading-none">25/Jun</span>
+                            </div>
+                            <div class="bg-[#ea580c] flex-1 rounded-2xl p-6 shadow-xl transform transition duration-300 group-hover:scale-[1.01]">
+                                <h4 class="text-xl font-black text-white uppercase tracking-wide mb-2">Live Oficial G30 2.0</h4>
+                                <p class="text-orange-50 text-sm font-medium">A grande revelação de ofertas para a base aquecida. Abertura do Feirão.</p>
+                            </div>
+                        </div>
+
+                        <!-- BLOCO 10: FEIRÃO -->
+                        <div class="flex flex-col md:flex-row gap-6 items-start relative z-10 group mt-4">
+                            <div class="bg-[#3b0a0a] border-4 border-red-900 group-hover:border-red-600 rounded-2xl w-full md:w-44 h-auto md:h-24 flex flex-col items-center justify-center shrink-0 shadow-lg z-10 transition duration-300 py-4 md:py-0">
+                                <span class="text-red-300 text-[10px] font-black uppercase tracking-widest mb-1">O Mega Feirão</span>
+                                <span class="text-red-500 font-black text-xl leading-none">25 a 27</span>
+                            </div>
+                            <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-3 w-full">
+                                <div class="bg-[#1a0f0f] border border-red-500/30 rounded-xl p-4 text-center">
+                                    <h5 class="text-red-500 font-black text-2xl mb-1">25</h5>
+                                    <span class="text-white text-[10px] font-black uppercase block mb-2">Quinta-Feira</span>
+                                </div>
+                                <div class="bg-[#1a0f0f] border border-red-500/30 rounded-xl p-4 text-center">
+                                    <h5 class="text-red-500 font-black text-2xl mb-1">26</h5>
+                                    <span class="text-white text-[10px] font-black uppercase block mb-2">Sexta-Feira</span>
+                                </div>
+                                <div class="bg-[#1a0f0f] border border-red-500/30 rounded-xl p-4 text-center">
+                                    <h5 class="text-red-500 font-black text-2xl mb-1">27</h5>
+                                    <span class="text-white text-[10px] font-black uppercase block mb-2">Sábado (Fim)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 3: TRÁFEGO PAGO E FUNIS                -->
+        <!-- ========================================== -->
+        <div id="tab-trafego" class="tab-content space-y-20">
+            <section class="text-center max-w-4xl mx-auto py-6">
+                <h2 class="text-4xl md:text-6xl font-black text-white uppercase italic tracking-tighter drop-shadow-lg leading-tight">
+                    Motor de <span class="text-orange-500">Vendas</span>
+                </h2>
+                <p class="mt-4 text-lg text-slate-400 max-w-2xl mx-auto">Planejamento estratégico de tráfego e funis de alta conversão.</p>
+            </section>
+
+            <section class="max-w-6xl mx-auto">
+                <div class="bg-[#050b08] border border-[#1a382a] rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
+                    <div class="text-center mb-12">
+                        <span class="bg-orange-600 text-white text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest inline-block mb-4 shadow-lg">Detalhes de Campanha</span>
+                        <h3 class="text-3xl md:text-4xl font-black text-white uppercase italic tracking-tighter">Conteúdos por <span class="text-orange-500">Fase</span></h3>
+                    </div>
+
+                    <div class="relative z-10 overflow-x-auto rounded-2xl border border-[#1a382a] shadow-xl">
+                        <table class="w-full text-left border-collapse min-w-[800px]">
+                            <thead class="bg-[#133325] text-orange-400 uppercase text-xs tracking-widest font-black border-b-2 border-orange-500/50">
+                                <tr>
+                                    <th class="px-6 py-5 w-1/5">Período / Data</th>
+                                    <th class="px-6 py-5 w-1/5">Fase do Feirão</th>
+                                    <th class="px-6 py-5 w-1/4">Conteúdo / Ação</th>
+                                    <th class="px-6 py-5 w-auto">Detalhes & Estratégia (Gravação)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-[#1a382a] text-sm text-slate-300">
+                                <tr class="hover:bg-[#0a1812] transition duration-200">
+                                    <td class="px-6 py-6 font-bold text-white">12 a 20/Jun</td>
+                                    <td class="px-6 py-6"><span class="bg-blue-900/30 text-blue-400 text-[10px] px-2 py-1 rounded font-black uppercase tracking-wider border border-blue-800/50">Captação</span></td>
+                                    <td class="px-6 py-6 font-bold text-white">Autoridade e Pré-Aprovação</td>
+                                    <td class="px-6 py-6 leading-relaxed">Rodar campanhas focadas em pré-aprovação com o Santander. Gerar listas mostrando que quem se antecipa garante as melhores taxas.</td>
+                                </tr>
+                                <tr class="hover:bg-[#0a1812] transition duration-200">
+                                    <td class="px-6 py-6 font-bold text-white">21 a 24/Jun</td>
+                                    <td class="px-6 py-6"><span class="bg-purple-900/30 text-purple-400 text-[10px] px-2 py-1 rounded font-black uppercase tracking-wider border border-purple-800/50">Agenda VIP</span></td>
+                                    <td class="px-6 py-6 font-bold text-white">Antecipação e Escassez</td>
+                                    <td class="px-6 py-6 leading-relaxed">Remarketing agressivo. Mostrar bastidores e carros sendo preparados. Convidar forte para a Lista/Grupo VIP da Live.</td>
+                                </tr>
+                                <tr class="hover:bg-[#0a1812] transition duration-200 bg-[#133325]/40 text-orange-50">
+                                    <td class="px-6 py-6 font-bold">25/Jun (19h30)</td>
+                                    <td class="px-6 py-6"><span class="bg-orange-500/20 text-orange-400 text-[10px] px-2 py-1 rounded font-black uppercase tracking-wider border border-orange-500/50">Abertura</span></td>
+                                    <td class="px-6 py-6 font-bold">Live de Ofertas (É Hoje!)</td>
+                                    <td class="px-6 py-6 leading-relaxed font-bold">Aviso massivo para a base de leads. Revelação das condições Santander + G30 Pay. Direcionar fluxo total para o atendimento IA.</td>
+                                </tr>
+                                <tr class="hover:bg-[#0a1812] transition duration-200 border-l-4 border-red-500">
+                                    <td class="px-6 py-6 font-bold text-white">26 e 27/Jun</td>
+                                    <td class="px-6 py-6"><span class="bg-red-900/30 text-red-400 text-[10px] px-2 py-1 rounded font-black uppercase tracking-wider border border-red-800/50">Fechamento</span></td>
+                                    <td class="px-6 py-6 font-bold text-white">Urgência Real (Entregas)</td>
+                                    <td class="px-6 py-6 leading-relaxed">Pausar campanhas frias. Focar orçamento em remarketing com carros sendo entregues/vendidos. Gatilho: "Últimas unidades!".</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 4: PRÉ-VENDAS E ACOMPANHAMENTO         -->
+        <!-- ========================================== -->
+        <div id="tab-presales" class="tab-content space-y-20">
+            <section class="text-center max-w-4xl mx-auto py-6">
+                <div class="mb-6 flex justify-center">
+                    <span class="bg-red-500/20 text-red-400 text-xs font-black px-4 py-2 rounded-full uppercase tracking-widest border border-red-500/30 flex items-center gap-2 shadow-lg">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                        Integrado com CarVoice
+                    </span>
+                </div>
+                <h2 class="text-4xl md:text-6xl font-black text-white uppercase italic tracking-tighter drop-shadow-lg leading-tight">
+                    Qualificação com <span class="text-orange-500">IA</span>
+                </h2>
+                <p class="mt-4 text-lg text-slate-400 max-w-2xl mx-auto">
+                    Utilize o discador <strong class="text-white">CarVoice</strong>. A Inteligência Artificial ouve sua ligação, transcreve e extrai os pilares do Método MAPA automaticamente para o seu CRM.
+                </p>
+            </section>
+
+            <!-- Simulador CarVoice AI Analysis -->
+            <section class="max-w-5xl mx-auto">
+                <div class="bg-[#111827] rounded-3xl border border-slate-700 shadow-2xl overflow-hidden flex flex-col md:flex-row relative">
+                    <!-- Left Bar: Call Stats -->
+                    <div class="w-full md:w-1/3 bg-[#1F2937] p-8 border-b md:border-b-0 md:border-r border-slate-700 flex flex-col justify-center">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-white">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold text-lg">(11) 98196-9226</h4>
+                                <span class="bg-green-500/20 text-green-400 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Atendida</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="bg-[#111827] border border-slate-700 rounded-xl p-4 text-center">
+                                <p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider mb-1">Chance de Fechar</p>
+                                <span class="text-green-400 font-black text-2xl">85%</span>
+                            </div>
+                            <div class="bg-[#111827] border border-slate-700 rounded-xl p-4 text-center">
+                                <p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider mb-1">Urgência</p>
+                                <span class="text-red-400 font-black text-2xl">Alta</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <h5 class="text-slate-400 text-xs font-bold uppercase tracking-widest border-b border-slate-700 pb-2">Tags do CarVoice</h5>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-indigo-500/20 text-indigo-300 text-xs px-2 py-1 rounded-md border border-indigo-500/30">financiamento</span>
+                                <span class="bg-indigo-500/20 text-indigo-300 text-xs px-2 py-1 rounded-md border border-indigo-500/30">feirão</span>
+                                <span class="bg-indigo-500/20 text-indigo-300 text-xs px-2 py-1 rounded-md border border-indigo-500/30">score baixo</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Bar: IA Transcription & MAPA -->
+                    <div class="w-full md:w-2/3 bg-[#0a1812] p-8 relative">
+                        <div class="absolute top-0 right-0 bg-red-600 text-white text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-bl-xl shadow-lg flex items-center gap-2">
+                            <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span> REC
+                        </div>
+                        
+                        <h4 class="text-xl font-black text-white italic mb-4">Callface Resume <span class="text-orange-500 text-sm font-normal not-italic ml-2">(Análise IA)</span></h4>
+                        
+                        <div class="bg-[#050b08] border border-[#1a382a] rounded-xl p-5 mb-6 text-sm text-slate-300 leading-relaxed italic border-l-4 border-l-orange-500">
+                            "Durante a chamada, o cliente demonstrou interesse em trocar o veículo atual no Mega Feirão G30. Ele confirmou que a esposa precisa assinar junto (Autoridade) e que o foco é reduzir o consumo de combustível (Problema). Concordou em enviar a documentação para pré-aprovação do Santander ainda hoje (Agenda)."
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-[#111827] border border-slate-700 rounded-xl p-5">
+                                <h5 class="text-white font-bold text-sm mb-3 flex items-center gap-2">
+                                    <span class="text-orange-500 text-lg">⚠️</span> Objeções Identificadas
+                                </h5>
+                                <ul class="text-slate-400 text-xs space-y-2">
+                                    <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">✖</span> Cliente com medo da taxa de juros.</li>
+                                    <li class="flex items-start gap-2"><span class="text-green-400 mt-0.5">✔</span> (Tratada) Consultor explicou isenção da G30 Pay.</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="flex flex-col justify-center">
+                                <button class="w-full bg-red-600 hover:bg-red-500 text-white font-bold uppercase tracking-widest text-xs py-4 rounded-xl shadow-lg transition-colors border border-red-400 flex justify-center items-center gap-2">
+                                    Sincronizar MAPA com CRM
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Estrutura MAPA -->
+            <section class="bg-[#0a1812] border border-[#1a382a] rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden max-w-5xl mx-auto mt-12">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-black text-white uppercase italic tracking-widest">Os 4 Pilares que a IA extrai da sua ligação</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
+                    <div class="bg-[#ea580c] rounded-2xl p-6 text-center text-[#050b08] shadow-lg transform transition hover:-translate-y-2 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-5xl font-black mb-2 italic">M</h3>
+                            <h4 class="text-lg font-black uppercase tracking-wider mb-1">Montante</h4>
+                        </div>
+                        <p class="text-xs font-bold uppercase opacity-90 mt-2 bg-black/10 py-1 rounded">Orçamento do cliente</p>
+                    </div>
+                    <div class="bg-[#ea580c] rounded-2xl p-6 text-center text-[#050b08] shadow-lg transform transition hover:-translate-y-2 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-5xl font-black mb-2 italic">A</h3>
+                            <h4 class="text-lg font-black uppercase tracking-wider mb-1">Autoridade</h4>
+                        </div>
+                        <p class="text-xs font-bold uppercase opacity-90 mt-2 bg-black/10 py-1 rounded">Decisor e a palavra final</p>
+                    </div>
+                    <div class="bg-[#ea580c] rounded-2xl p-6 text-center text-[#050b08] shadow-lg transform transition hover:-translate-y-2 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-5xl font-black mb-2 italic">P</h3>
+                            <h4 class="text-lg font-black uppercase tracking-wider mb-1">Problema</h4>
+                        </div>
+                        <p class="text-xs font-bold uppercase opacity-90 mt-2 bg-black/10 py-1 rounded">Necessidade real (veículo)</p>
+                    </div>
+                    <div class="bg-[#ea580c] rounded-2xl p-6 text-center text-[#050b08] shadow-lg transform transition hover:-translate-y-2 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-5xl font-black mb-2 italic">A</h3>
+                            <h4 class="text-lg font-black uppercase tracking-wider mb-1">Agenda</h4>
+                        </div>
+                        <p class="text-xs font-bold uppercase opacity-90 mt-2 bg-black/10 py-1 rounded">Prazo para decisão</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- NOVO: MAPA DO ACOMPANHAMENTO -->
+            <section class="max-w-5xl mx-auto mt-12">
+                <div class="bg-gradient-to-br from-[#111827] to-[#0a1812] rounded-3xl border border-slate-700 p-8 md:p-12 shadow-2xl relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-64 h-64 bg-orange-600/5 blur-[80px] rounded-full pointer-events-none"></div>
+                    
+                    <div class="text-center mb-10 relative z-10">
+                        <span class="bg-orange-600/20 text-orange-500 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest inline-block mb-4 border border-orange-500/30">Processo Oficial</span>
+                        <h3 class="text-3xl md:text-4xl font-black text-white uppercase italic tracking-tighter">MAPA do <span class="text-orange-500">Acompanhamento</span></h3>
+                        <p class="text-slate-400 mt-3">Passo a passo dos pontos de contacto. Identifique os leads quentes nestas 4 etapas.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+                        <div class="bg-[#050b08] border border-[#1a382a] rounded-2xl p-6 flex gap-4 items-start shadow-md hover:border-emerald-500/50 transition">
+                            <div class="bg-[#133325] text-emerald-400 p-3 rounded-xl font-black">1</div>
+                            <div>
+                                <h4 class="text-white font-bold mb-1 uppercase tracking-wider text-sm">3 Ligações Tradicionais</h4>
+                                <p class="text-slate-400 text-sm leading-relaxed">Ligações seguidas até cair na caixa postal, uma atrás da outra para ativar o gatilho de urgência e fazer o cliente atender.</p>
+                            </div>
+                        </div>
+                        <div class="bg-[#050b08] border border-[#1a382a] rounded-2xl p-6 flex gap-4 items-start shadow-md hover:border-emerald-500/50 transition">
+                            <div class="bg-[#133325] text-emerald-400 p-3 rounded-xl font-black">2</div>
+                            <div>
+                                <h4 class="text-white font-bold mb-1 uppercase tracking-wider text-sm">1 Chamada de Vídeo</h4>
+                                <p class="text-slate-400 text-sm leading-relaxed">Faça uma videochamada para ativar o gatilho de quebra de padrão no cliente.</p>
+                            </div>
+                        </div>
+                        <div class="bg-[#050b08] border border-[#1a382a] rounded-2xl p-6 flex gap-4 items-start shadow-md hover:border-emerald-500/50 transition">
+                            <div class="bg-[#133325] text-emerald-400 p-3 rounded-xl font-black">3</div>
+                            <div>
+                                <h4 class="text-white font-bold mb-1 uppercase tracking-wider text-sm">1 Mensagem de Vídeo</h4>
+                                <p class="text-slate-400 text-sm leading-relaxed">Envie um vídeo estilo 'bolinha' com uma das 10 Mensagens MAPA disponíveis abaixo.</p>
+                            </div>
+                        </div>
+                        <div class="bg-[#1a0f0f] border border-orange-500/30 rounded-2xl p-6 flex gap-4 items-start shadow-md hover:border-orange-500/80 transition">
+                            <div class="bg-orange-600/20 text-orange-500 p-3 rounded-xl font-black">4</div>
+                            <div>
+                                <h4 class="text-orange-400 font-bold mb-1 uppercase tracking-wider text-sm">O Áudio Mudo (Após 3 horas)</h4>
+                                <p class="text-slate-300 text-sm leading-relaxed">Grave 1 áudio mudo de 10 seg. se ele não responder aos contactos. Em seguida, envie: <br/><em class="text-white font-medium italic mt-1 block">"(nome do cliente) você acha que faz sentido para você?"</em></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 bg-red-900/20 border border-red-500/30 rounded-xl p-4 text-center relative z-10 flex flex-col items-center gap-2">
+                        <span class="text-red-500 text-2xl">⚠️</span>
+                        <p class="text-red-400 font-bold text-sm uppercase tracking-wider">Após realizar esses 4 pontos de contacto, você desiste do lead naquele dia.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Roteiros para o CarVoice -->
+            <section class="max-w-7xl mx-auto space-y-8 pb-12 mt-12">
+                <div class="border-b border-[#1a382a] pb-4 mb-8 text-center">
+                    <h3 class="text-3xl font-black text-white uppercase italic tracking-widest">10 Mensagens MAPA <span class="text-orange-500">Acompanhamento</span></h3>
+                    <p class="text-slate-400 mt-2 text-sm">Utilize nos vídeos estilo 'bolinha' ou no seu discador CarVoice.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="mensagensMapaContainer"></div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- Botão Flutuante WhatsApp G30 Oficial -->
+    <a href="https://wa.me/551931991730" target="_blank" rel="noopener noreferrer" class="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50 bg-[#25D366] hover:bg-[#1ebd5c] text-white p-3 md:p-4 rounded-full shadow-[0_4px_20px_rgba(37,211,102,0.4)] transition-all transform hover:-translate-y-1 hover:scale-110 flex items-center justify-center group cursor-pointer">
+        <svg class="w-8 h-8 md:w-9 md:h-9" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+        </svg>
+        <!-- Tooltip -->
+        <span class="absolute right-full mr-4 whitespace-nowrap bg-[#050b08] border border-[#1a382a] text-white py-2 px-4 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none shadow-2xl flex flex-col items-end transform group-hover:-translate-x-1">
+            <span class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">Suporte G30 Oficial</span>
+            <span class="text-[#25D366] font-bold tracking-wide text-sm">(19) 3199-1730</span>
+        </span>
+    </a>
+
+    <!-- Teleprompter Modal (MELHORADO) -->
+    <div id="teleprompterModal" class="fixed inset-0 bg-black z-[100] hidden flex flex-col">
+        <div class="flex justify-between items-center p-4 md:p-6 bg-[#050b08] border-b border-[#1a382a]">
+            <h3 class="text-white font-black uppercase italic tracking-wider text-sm md:text-base">Modo Teleprompter</h3>
+            
+            <!-- Controles do Teleprompter -->
+            <div class="flex items-center gap-2 md:gap-4">
+                <button onclick="changeFontSize(-0.2)" class="bg-[#133325] text-white px-3 py-1.5 rounded text-xs font-bold border border-[#1a382a] hover:bg-[#1a382a]">A-</button>
+                <button onclick="changeFontSize(0.2)" class="bg-[#133325] text-white px-3 py-1.5 rounded text-xs font-bold border border-[#1a382a] hover:bg-[#1a382a]">A+</button>
+                <div class="w-px h-6 bg-slate-700 mx-1"></div>
+                <button onclick="toggleTeleprompterScroll()" id="btnScrollTP" class="bg-blue-600 text-white px-4 py-1.5 rounded text-xs font-black uppercase tracking-wider hover:bg-blue-500 flex items-center gap-1 shadow-lg">
+                    ▶ Play
+                </button>
+                <div class="w-px h-6 bg-slate-700 mx-1"></div>
+                <button id="closeTeleprompter" class="text-slate-400 hover:text-white px-2 md:px-4 py-2 font-bold uppercase text-xs md:text-sm tracking-wider">Fechar [X]</button>
+            </div>
+        </div>
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 flex flex-col items-center bg-[#020504] pb-40" id="tpScrollArea">
+            <div class="max-w-4xl text-center w-full mt-10 md:mt-20">
+                <p id="prompterText" class="teleprompter-text font-bold tracking-tight text-white whitespace-pre-wrap transition-all duration-300" style="font-size: 2.5rem; background: transparent;">Selecione um roteiro para visualizar aqui.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        const scriptsData = [
+            {
+                id: 1,
+                model: "Chevrolet Onix",
+                category: "standard",
+                tags: ["Economia", "Tecnologia", "Hatch"],
+                tip: "Comece filmando o farol/grade frontal e depois entre no carro mostrando o painel ligado.",
+                hooks: [
+                    { label: "Atenção", text: "Você que busca economia extrema, conectividade de ponta e não abre mão de um design moderno, fica aqui comigo para conhecer essa máquina que acabou de entrar no Mega Feirão G30." },
+                    { label: "Perfil", text: "Você que trabalha rodando o dia todo e precisa de um parceiro econômico e tecnológico, não passa esse vídeo e confere os detalhes desse carro." }
+                ],
+                body: "Esse é o Chevrolet Onix. O hatch que conquistou o Brasil! Ele conta com um motor super econômico que poupa o seu bolso, uma central multimídia completíssima para você não perder nada, e uma direção leve que deixa qualquer trajeto no trânsito muito mais fácil.",
+                cta: "Se você chegou até aqui é porque sabe que esse carro é para você. Então clica no botão aqui embaixo, fala com a nossa equipe agora e já agenda a sua visita no Mega Feirão G30 para conferir ele de perto!"
+            },
+            {
+                id: 2,
+                model: "Hyundai HB20",
+                category: "standard",
+                tags: ["Estilo", "Conforto", "Hatch"],
+                tip: "Mostre o design lateral do carro em um ângulo mais baixo e depois foque nos detalhes do banco e acabamento interno.",
+                hooks: [
+                    { label: "Atenção", text: "Você que não abre mão de ter um carro estiloso, confortável e com mecânica confiável, vem comigo conferir essa exclusividade do Mega Feirão G30." },
+                    { label: "Perfil", text: "Você que é jovem, está buscando o seu primeiro carro e quer algo moderno e sem dor de cabeça, confere comigo os detalhes desse veículo." }
+                ],
+                body: "Apresento para você o Hyundai HB20. Um carro com linhas esportivas marcantes, um acabamento interno premium que se destaca na categoria e a tranquilidade de uma mecânica resistente que não te deixa na mão.",
+                cta: "Gostou do que viu? Então não perde tempo. Clica no link aqui embaixo, chama nossa equipe no WhatsApp e garante o seu horário para fazer um test drive exclusivo no Mega Feirão G30."
+            },
+            {
+                id: 3,
+                model: "Fiat Argo",
+                category: "standard",
+                tags: ["Espaço", "Robustez", "Hatch"],
+                tip: "Comece abrindo o porta-malas ou a porta traseira para mostrar o espaço, depois passe para a visão do motorista.",
+                hooks: [
+                    { label: "Atenção", text: "Você que procura um carro robusto, com ótimo espaço interno e que seja valente no dia a dia, fica nesse vídeo que eu tenho a opção certa." },
+                    { label: "Perfil", text: "Você que é pai ou mãe de família, precisa de um porta-malas bacana e conforto para levar a garotada, acompanha comigo os detalhes desse destaque do Mega Feirão G30." }
+                ],
+                body: "Dá uma olhada neste Fiat Argo. Um hatch valente com uma suspensão perfeita para os desafios da cidade, muito conforto no banco de trás para a família inteira e um acabamento que surpreende quem assume o volante.",
+                cta: "Se esse é o carro que vai facilitar a sua rotina, clica agora no botão abaixo, fala com o nosso time e agenda a sua visita aqui no Mega Feirão G30 antes que alguém compre primeiro!"
+            },
+            {
+                id: 4,
+                model: "Renault Kwid",
+                category: "standard",
+                tags: ["Preço", "Agilidade", "Hatch"],
+                tip: "Mostre o carro estacionado em uma vaga um pouco mais apertada para provar a agilidade, depois mostre a altura do solo.",
+                hooks: [
+                    { label: "Atenção", text: "Você que quer pagar pouco, ter agilidade na cidade e ainda levar um carro super econômico, não pula o vídeo e olha essa oportunidade do Mega Feirão G30." },
+                    { label: "Perfil", text: "Você que é estudante ou acabou de tirar a carteira e quer um carro fácil de estacionar e barato de manter, confere comigo os detalhes desse guerreiro." }
+                ],
+                body: "Esse é o Renault Kwid, o SUV dos compactos. Ele tem uma altura de solo excelente para você não raspar em valetas, um consumo de combustível que parece de moto e o tamanho perfeito para caber em absolutamente qualquer vaga.",
+                cta: "Se você quer levar esse parceiro para a sua garagem, clica aqui embaixo, fala com um dos nossos consultores e vem tomar um café com a gente no Mega Feirão G30!"
+            },
+            {
+                id: 5,
+                model: "Volkswagen Polo",
+                category: "urgency",
+                tags: ["Design Premium", "Desempenho", "Hatch"],
+                tip: "Destaque o painel digital e o visual esportivo.",
+                hooks: [
+                    { label: "Urgência", text: "Amanhã pode ser tarde demais e você sabe disso. Carro premium com essa condição some rápido, por isso te apresento agora esse veículo." },
+                    { label: "Oportunidade", text: "Oportunidade única no Mega Feirão G30! E se eu fosse você, já me preparava para clicar aqui embaixo e falar com a minha equipe, mas calma... antes, confere comigo os detalhes." }
+                ],
+                body: "Apresento o Volkswagen Polo. Um hatch com pegada esportiva, painel 100% digital e um motor que responde na hora que você pisa. É dirigir pra se apaixonar na primeira volta.",
+                cta: "Essa unidade não vai dormir no pátio hoje. Clica no link agora, chama a minha equipe e garante a sua reserva no Mega Feirão G30 antes que outro cliente leve!"
+            },
+            {
+                id: 6,
+                model: "Jeep Renegade",
+                category: "urgency",
+                tags: ["Status", "Aventura", "SUV"],
+                tip: "Mostre a grade frontal icônica e a altura de direção.",
+                hooks: [
+                    { label: "Sonho", text: "Sabe aquele sonho que você vem adiando? A chance de realizar é agora, mas o relógio tá correndo. Vem ver isso aqui." },
+                    { label: "Exclusividade", text: "Uma exclusividade dessas não dura 24 horas no Mega Feirão G30. Presta muita atenção porque esse carro pode ser seu, mas tem que ser rápido." }
+                ],
+                body: "Olha a imponência desse Jeep Renegade. O SUV mais desejado do Brasil, com um acabamento impecável, posição de dirigir elevada e muita segurança pra você e pra sua família desbravarem qualquer caminho.",
+                cta: "Quem pensa muito, fica sem. Clica aqui embaixo agora, manda mensagem pra nossa equipe e vem fechar negócio hoje mesmo no Mega Feirão G30!"
+            },
+            {
+                id: 7,
+                model: "Fiat Strada",
+                category: "urgency",
+                tags: ["Trabalho", "Revenda", "Pickup"],
+                tip: "Destaque a caçamba e a versatilidade.",
+                hooks: [
+                    { label: "Rapidez", text: "Você sabe que picape boa e com preço justo some do pátio no mesmo dia, né? Aqui no Mega Feirão G30 não pisca, senão você perde." },
+                    { label: "Trabalho", text: "Amanhã pode ser tarde demais e você sabe disso. Quem trabalha não pode perder tempo, é por isso que te apresento agora essa bruta." }
+                ],
+                body: "Essa é a Fiat Strada, a líder absoluta de vendas! Caçamba espaçosa para o seu trabalho, conforto de carro de passeio para o seu fim de semana e a revenda mais rápida do mercado.",
+                cta: "Você encontrou a sua ferramenta de trabalho. Clica no botão aqui embaixo, fala com nossos consultores e vem buscar a sua no Mega Feirão G30 antes que seu concorrente compre."
+            },
+            {
+                id: 8,
+                model: "Chevrolet Tracker",
+                category: "urgency",
+                tags: ["Tecnologia", "Espaço", "SUV"],
+                tip: "Foque no teto solar e multimídia.",
+                hooks: [
+                    { label: "Emoção", text: "Oportunidade Única! E se eu fosse você já me preparava para clicar aqui embaixo, mas segura a emoção e confere comigo os detalhes desse SUV." },
+                    { label: "Unidade Única", text: "Eu tenho apenas uma unidade com essa condição especial. Se você piscar, já era. Confere os detalhes dessa máquina no Mega Feirão G30." }
+                ],
+                body: "Chevrolet Tracker, o SUV que une um design arrebatador com o melhor consumo da categoria. Teto solar, wi-fi nativo e espaço de sobra pra família viajar com muito conforto.",
+                cta: "Não deixa essa chance passar. Clica agora no link abaixo, agenda sua visita com o nosso time e vem fazer um test drive no Mega Feirão G30!"
+            },
+            {
+                id: 9,
+                model: "Toyota Corolla",
+                category: "urgency",
+                tags: ["Luxo", "Confiabilidade", "Sedan"],
+                tip: "Filmagem clássica e estável, transmitindo elegância.",
+                hooks: [
+                    { label: "Raridade", text: "Carro de garagem, raridade no mercado. Quem conhece sabe que não dá tempo de pensar muito. Vem conferir." },
+                    { label: "Procedência", text: "Amanhã pode ser tarde demais e você sabe disso. Achar um carro com essa procedência é como ganhar na loteria no Mega Feirão G30." }
+                ],
+                body: "Dispensa apresentações, né? Toyota Corolla. Sinônimo de luxo, conforto extremo, mecânica inquebrável e um valor que nunca despenca. É o carro para a vida toda.",
+                cta: "Um seminovo impecável assim voa do estoque. Clica aqui embaixo, fala com a equipe e reserva o seu agora no Mega Feirão G30!"
+            },
+            {
+                id: 10,
+                model: "Volkswagen Gol",
+                category: "urgency",
+                tags: ["Manutenção", "Guerreiro", "Hatch"],
+                tip: "Simplicidade e robustez.",
+                hooks: [
+                    { label: "Relâmpago", text: "Oportunidade relâmpago! Esse é daqueles que a gente posta e vende em minutos. Fica comigo e olha por quê." },
+                    { label: "Custo", text: "A chance de sair de carro novo, pagando pouco, acabou de bater na sua tela, mas ela não vai esperar no Mega Feirão G30." }
+                ],
+                body: "O guerreiro do Brasil! Volkswagen Gol. Mecânica de confiança, peças baratas e pronto pra rodar todo dia sem te dar dor de cabeça. O famoso \"pau pra toda obra\".",
+                cta: "O Mega Feirão G30 tá lotado e esse carro tá na mira de muita gente. Clica no link, garante seu atendimento com nossa equipe e corre pra cá!"
+            },
+            {
+                id: 11,
+                model: "Nissan Kicks",
+                category: "urgency",
+                tags: ["Economia", "Tecnologia", "SUV"],
+                tip: "Destaque os bancos e câmeras.",
+                hooks: [
+                    { label: "Emoção", text: "Emoção pura! Sabe aquele carro que faz o coração bater mais forte? Ele está aqui no Mega Feirão G30, mas o cronômetro tá rodando." },
+                    { label: "Preço", text: "Amanhã pode ser tarde demais e você sabe disso. Oportunidade de SUV completão com preço de hatch é agora!" }
+                ],
+                body: "Esse é o Nissan Kicks. Design japonês inconfundível, bancos com tecnologia gravidade zero para você não cansar no trânsito e um consumo excelente para um SUV.",
+                cta: "Pra garantir essa condição exclusiva do Mega Feirão G30, você precisa agir. Clica no botão agora, fala com a nossa equipe e vem buscar sua chave!"
+            },
+            {
+                id: 12,
+                model: "Fiat Mobi",
+                category: "urgency",
+                tags: ["Urbano", "Economia", "Hatch"],
+                tip: "Mostre a facilidade de acesso.",
+                hooks: [
+                    { label: "Parcela", text: "Oportunidade Única! E se eu fosse você, já me preparava para clicar aqui embaixo. Parcela pequena no Mega Feirão G30!" },
+                    { label: "App/Trabalho", text: "Seu primeiro carro ou seu parceiro de aplicativo está na sua frente, mas com esse preço, ele não passa de hoje." }
+                ],
+                body: "Fiat Mobi. Compacto por fora pra caber em qualquer vaga, e gigante na economia. O carro ideal pra você fugir do transporte público sem se apertar no fim do mês.",
+                cta: "É a sua vez de acelerar no Mega Feirão G30! Clica no link, chama a equipe e vem fechar negócio antes que acabe."
+            },
+            {
+                id: 13,
+                model: "Honda Civic",
+                category: "urgency",
+                tags: ["Esportividade", "Status", "Sedan"],
+                tip: "Ângulos agressivos e interior cockpit.",
+                hooks: [
+                    { label: "Exclusivo", text: "Quem gosta de carro exclusivo vai enlouquecer com esse aqui no Mega Feirão G30. Mas atenção: é a única unidade." },
+                    { label: "Competição", text: "Amanhã pode ser tarde demais. Se você demorar pra mandar mensagem, vai ver outro cliente saindo com ele da loja." }
+                ],
+                body: "Olha a agressividade desse Honda Civic. Um sedan esportivo, com motor potente, interior premium que parece um cockpit de avião e estabilidade de sobra na pista.",
+                cta: "Esse não é um carro pra quem tem dúvida. Clica no link abaixo agora, fala com a nossa equipe e garante essa nave no Mega Feirão G30!"
+            },
+            {
+                id: 14,
+                model: "Ford Ka",
+                category: "urgency",
+                tags: ["Custo-benefício", "Potência", "Hatch"],
+                tip: "Mostre o motor ou interior espaçoso.",
+                hooks: [
+                    { label: "Porta", text: "A oportunidade que você estava esperando bateu na sua porta no Mega Feirão G30. Você vai abrir?" },
+                    { label: "Completo", text: "Oportunidade Única, e se eu fosse você já me preparava para clicar aqui embaixo. Carro completo com condição de feirão!" }
+                ],
+                body: "O queridinho do custo-benefício, Ford Ka! Motor esperto que anda muito bem na estrada e na cidade, direção elétrica super leve e um espaço interno que surpreende.",
+                cta: "Bateu o olho, gostou? Então não perde a chance. Clica no botão aqui embaixo, agenda com a nossa equipe e vem pro Mega Feirão G30!"
+            }
+        ];
+
+        const mapMessages = [
+            { id: 1, title: "Clareza direta", text: "[nome do cliente], me ajuda aqui, tô organizando meus atendimentos. Você ainda tá avaliando comprar seu (carro/moto) ou já resolveu?" },
+            { id: 2, title: "Prioridade (tempo)", text: "[nome do cliente], ainda é prioridade pra você comprar seu (carro/moto) agora ou ficou pra mais pra frente?" },
+            { id: 3, title: "Ativa dor (impacto)", text: "[nome do cliente], me ajuda aqui você ainda vai comprar seu (carro/moto)? Pergunto porque muita gente adia e continua com o mesmo problema no carro/moto. Ainda tá te incomodando?" },
+            { id: 4, title: "Emocional + futuro", text: "[nome do cliente], Se você resolver aquele ponto que te incomoda no carro/moto, isso melhora seu dia a dia hoje?" },
+            { id: 5, title: "Posicionamento (sim/não)", text: "[nome do cliente], Você prefere comprar seu (carro/moto) agora ou deixar pra quando ficar mais urgente?" },
+            { id: 6, title: "Quebra de padrão", text: "[nome do cliente], posso ser direto contigo pra respeitar teu tempo? Você ainda tá no jogo compra seu (carro/moto)?" },
+            { id: 7, title: "Sem pressão (confiança)", text: "[nome do cliente], Não quero te incomodar. Só entender se faz sentido eu seguir te ajudando na compra seu (carro/moto)" },
+            { id: 8, title: "Decisão com condição", text: "[nome do cliente], Se aparecer uma condição que encaixe no seu orçamento, você avançaria agora?" },
+            { id: 9, title: "Autoridade (quem decide)", text: "[nome do cliente], Hoje depende só de você ou precisa alinhar com alguém pra bater o martelo?" },
+            { id: 10, title: "Final definitivo (mata e ressuscita)", text: "[nome do cliente], Vou encerrar seu atendimento por aqui pra não te incomodar. Se fizer sentido retomar, me chama que será uma honra te ajudar na realização do sonho da compra seu (carro/moto)." }
+        ];
+
+        // Variáveis do Teleprompter
+        let currentFontSize = 2.5;
+        let tpScrollInterval;
+        let isScrolling = false;
+
+        function switchTab(tabId) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+                tab.style.display = 'none';
+            });
+            const baseClass = "nav-btn text-slate-400 hover:text-orange-400 px-3 py-2 text-sm font-bold uppercase tracking-wider transition";
+            const borderedClass = "nav-btn text-slate-400 hover:text-orange-400 bg-transparent border border-transparent px-4 py-2 rounded-md text-sm font-bold uppercase tracking-wide transition flex items-center gap-2";
+            const filledClass = "nav-btn text-slate-400 hover:text-orange-400 bg-[#133325] border border-[#1a382a] px-4 py-2 rounded-md text-sm font-bold uppercase tracking-wide transition shadow-lg flex items-center gap-2";
+            document.getElementById('nav-feirao').className = baseClass;
+            document.getElementById('nav-calendario').className = borderedClass;
+            document.getElementById('nav-trafego').className = borderedClass;
+            document.getElementById('nav-prevendas').className = filledClass;
+            if (tabId === 'main') {
+                document.getElementById('tab-main').style.display = 'block';
+                setTimeout(() => document.getElementById('tab-main').classList.add('active'), 50);
+                document.getElementById('nav-feirao').classList.replace('text-slate-400', 'text-orange-500');
+            } else if (tabId === 'calendario') {
+                document.getElementById('tab-calendario').style.display = 'block';
+                setTimeout(() => document.getElementById('tab-calendario').classList.add('active'), 50);
+                document.getElementById('nav-calendario').classList.replace('text-slate-400', 'text-orange-500');
+                document.getElementById('nav-calendario').classList.add('border-orange-500');
+            } else if (tabId === 'trafego') {
+                document.getElementById('tab-trafego').style.display = 'block';
+                setTimeout(() => document.getElementById('tab-trafego').classList.add('active'), 50);
+                document.getElementById('nav-trafego').classList.replace('text-slate-400', 'text-orange-500');
+                document.getElementById('nav-trafego').classList.add('border-orange-500');
+            } else if (tabId === 'presales') {
+                document.getElementById('tab-presales').style.display = 'block';
+                setTimeout(() => document.getElementById('tab-presales').classList.add('active'), 50);
+                document.getElementById('nav-prevendas').classList.replace('text-slate-400', 'text-orange-500');
+                document.getElementById('nav-prevendas').classList.replace('border-[#1a382a]', 'border-orange-500');
+            }
+            const mobileBtns = document.querySelectorAll('.xl\\:hidden button');
+            mobileBtns.forEach(btn => { btn.className = "bg-[#133325] text-white px-3 py-2 rounded-md text-[10px] font-bold uppercase border border-[#1a382a] shrink-0"; });
+            if(tabId === 'main') mobileBtns[0].className = "bg-orange-600 text-white px-3 py-2 rounded-md text-[10px] font-bold uppercase shrink-0";
+            if(tabId === 'calendario') mobileBtns[1].className = "bg-orange-600 text-white px-3 py-2 rounded-md text-[10px] font-bold uppercase shrink-0";
+            if(tabId === 'trafego') mobileBtns[2].className = "bg-orange-600 text-white px-3 py-2 rounded-md text-[10px] font-bold uppercase shrink-0";
+            if(tabId === 'presales') mobileBtns[3].className = "bg-orange-600 text-white px-3 py-2 rounded-md text-[10px] font-bold uppercase shrink-0";
+        }
+
+        // NOVO: Função de Filtro
+        function filterScripts(category) {
+            // Atualizar UI dos botões
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-orange-600', 'text-white');
+                btn.classList.add('bg-[#133325]', 'text-slate-300');
+                if (btn.innerText.includes(category)) {
+                    btn.classList.remove('bg-[#133325]', 'text-slate-300');
+                    btn.classList.add('bg-orange-600', 'text-white');
+                }
+            });
+
+            renderAllScripts(category);
+        }
+
+        function renderAllScripts(filter = 'Todos') {
+            const container = document.getElementById('allScriptsContainer');
+            if(!container) return;
+            container.innerHTML = '';
+            
+            let filteredScripts = scriptsData;
+            
+            if (filter !== 'Todos') {
+                if (filter === 'Urgência') {
+                    filteredScripts = scriptsData.filter(car => car.category === 'urgency');
+                } else {
+                    filteredScripts = scriptsData.filter(car => car.tags.includes(filter));
+                }
+            }
+
+            if (filteredScripts.length === 0) {
+                container.innerHTML = '<p class="text-slate-400 text-center py-10 italic">Nenhum roteiro encontrado para esta categoria.</p>';
+                return;
+            }
+
+            filteredScripts.forEach(car => {
+                const isUrgency = car.category === 'urgency';
+                const urgencyBadge = isUrgency ? '<span class="bg-orange-500/20 text-orange-400 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider md:ml-3 border border-orange-500/30 inline-block mt-2 md:mt-0">🔥 Urgência</span>' : '';
+                const card = document.createElement('div');
+                card.className = 'bg-[#0a1812] rounded-2xl shadow-xl border border-[#1a382a] overflow-hidden';
+                card.innerHTML = `<div class="bg-[#050b08] p-6 border-b border-[#1a382a] flex flex-col md:flex-row md:items-center justify-between gap-4"><div><h4 class="text-2xl font-black text-white flex flex-col md:flex-row md:items-center italic tracking-tight">🚘 ${car.model} ${urgencyBadge}</h4><div class="flex flex-wrap gap-2 mt-3">${car.tags.map(tag => `<span class="bg-[#133325] border border-[#1a382a] text-slate-300 text-xs px-3 py-1 rounded-full font-bold shadow-sm">${tag}</span>`).join('')}</div></div><div class="bg-emerald-900/20 text-emerald-400 text-sm p-4 rounded-lg border border-emerald-800/40 flex-1 md:max-w-md"><strong class="text-emerald-300">🎥 Dica:</strong> <br/> ${car.tip}</div></div><div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8"><div class="space-y-4"><div class="flex items-center justify-between"><h5 class="font-black text-slate-400 uppercase text-xs bg-[#133325] px-3 py-1.5 rounded border border-[#1a382a]">Opção 1: ${car.hooks[0].label}</h5><button onclick="openTeleprompter(${car.id}, 0)" class="text-xs font-bold uppercase bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-500 transition shadow-lg flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg> Abrir TP</button></div><div class="border-l-4 border-slate-600 pl-4 space-y-3"><p class="text-white text-lg font-medium"><strong>[Gancho]</strong> ${car.hooks[0].text}</p><p class="text-slate-400"><strong>[Corpo]</strong> ${car.body}</p><p class="text-white"><strong>[Chamada]</strong> <span class="text-orange-400 font-bold">${car.cta}</span></p></div></div><div class="space-y-4"><div class="flex items-center justify-between"><h5 class="font-black text-slate-400 uppercase text-xs bg-[#133325] px-3 py-1.5 rounded border border-[#1a382a]">Opção 2: ${car.hooks[1].label}</h5><button onclick="openTeleprompter(${car.id}, 1)" class="text-xs font-bold uppercase bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-500 transition shadow-lg flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg> Abrir TP</button></div><div class="border-l-4 border-slate-600 pl-4 space-y-3"><p class="text-white text-lg font-medium"><strong>[Gancho]</strong> ${car.hooks[1].text}</p><p class="text-slate-400"><strong>[Corpo]</strong> ${car.body}</p><p class="text-white"><strong>[Chamada]</strong> <span class="text-orange-400 font-bold">${car.cta}</span></p></div></div></div>`;
+                container.appendChild(card);
+            });
+        }
+
+        function renderMapMessages() {
+            const container = document.getElementById('mensagensMapaContainer');
+            if(!container) return;
+            container.innerHTML = '';
+            mapMessages.forEach(msg => {
+                const card = document.createElement('div');
+                card.className = "bg-[#050b08] border-t-4 border-orange-500 rounded-xl p-6 shadow-lg flex flex-col justify-between h-full";
+                card.innerHTML = `<div><div class="flex items-center justify-between mb-3"><span class="text-orange-500 font-black text-xl italic">#${msg.id}</span><h4 class="text-white font-bold tracking-wide">${msg.title}</h4></div><p class="text-slate-400 text-sm italic mb-6 border-l-2 border-[#1a382a] pl-3 py-1">"${msg.text}"</p></div><button onclick="copySpecificText(this, '${msg.text.replace(/'/g, "\\'")}', false)" class="w-full bg-[#133325] hover:bg-orange-600 text-orange-400 hover:text-white font-bold uppercase py-2 rounded-lg transition duration-300 border border-[#1a382a] text-xs shadow-md"><span>Copiar Script</span></button>`;
+                container.appendChild(card);
+            });
+        }
+
+        function openTeleprompter(carId, hookIndex) {
+            const car = scriptsData.find(c => c.id === carId);
+            if (!car) return;
+            const fullText = `[Gancho]\n${car.hooks[hookIndex].text}\n\n[Corpo]\n${car.body}\n\n[Chamada]\n${car.cta}\n\n\n\n\n(Fim do Script)`;
+            document.getElementById('prompterText').innerText = fullText;
+            document.getElementById('teleprompterModal').classList.remove('hidden');
+            
+            // Reset scroll state
+            document.getElementById('tpScrollArea').scrollTop = 0;
+            if(isScrolling) toggleTeleprompterScroll(); // force pause
+        }
+
+        // NOVAS FUNÇÕES DO TELEPROMPTER
+        function changeFontSize(amount) {
+            currentFontSize += amount;
+            if (currentFontSize < 1.5) currentFontSize = 1.5;
+            if (currentFontSize > 5) currentFontSize = 5;
+            document.getElementById('prompterText').style.fontSize = currentFontSize + 'rem';
+        }
+
+        function toggleTeleprompterScroll() {
+            const btn = document.getElementById('btnScrollTP');
+            const scrollArea = document.getElementById('tpScrollArea');
+            
+            if (isScrolling) {
+                clearInterval(tpScrollInterval);
+                isScrolling = false;
+                btn.innerHTML = '▶ Play';
+                btn.classList.replace('bg-red-600', 'bg-blue-600');
+                btn.classList.replace('hover:bg-red-500', 'hover:bg-blue-500');
+            } else {
+                isScrolling = true;
+                btn.innerHTML = '⏸ Pause';
+                btn.classList.replace('bg-blue-600', 'bg-red-600');
+                btn.classList.replace('hover:bg-blue-500', 'hover:bg-red-500');
+                
+                tpScrollInterval = setInterval(() => {
+                    scrollArea.scrollTop += 1.5; // Velocidade do scroll
+                }, 30);
+            }
+        }
+
+        function copySpecificText(btn, textToCopy, isLargeBtn = false) {
+            const textarea = document.createElement('textarea');
+            textarea.value = textToCopy;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                const btnTextSpan = btn.querySelector('span');
+                const originalText = btnTextSpan.innerText;
+                btnTextSpan.innerText = 'Copiado! ✅';
+                setTimeout(() => { btnTextSpan.innerText = originalText; }, 2000);
+            } catch (err) { console.error('Falha ao copiar:', err); } finally { document.body.removeChild(textarea); }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllScripts('Todos');
+            renderMapMessages();
+            document.getElementById('closeTeleprompter').addEventListener('click', () => { 
+                document.getElementById('teleprompterModal').classList.add('hidden'); 
+                if(isScrolling) toggleTeleprompterScroll(); // Pause on close
+            });
+        });
+    </script>
+</body>
+</html>
