@@ -17,7 +17,7 @@
             min-height: 100vh;
         }
         .script-card { transition: all 0.3s ease; }
-        .teleprompter-text { font-size: 2rem; line-height: 1.4; color: white; background: black; padding: 2rem; border-radius: 8px; }
+        
         /* Scrollbar hiding for clean UI */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -84,7 +84,7 @@
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
         <!-- ========================================== -->
-        <!-- TAB 1: O FEIRÃO (Estratégia e Roteiros)    -->
+        <!-- TAB 1: O FEIRÃO (Estratégia e Gideão)      -->
         <!-- ========================================== -->
         <div id="tab-main" class="tab-content active space-y-20">
             
@@ -311,24 +311,16 @@
                 </div>
             </section>
 
-            <!-- Roteiros -->
-            <section id="informativo" class="space-y-8 pt-24 -mt-24">
-                <div class="border-b border-[#1a382a] pb-4 mb-8">
-                    <h3 class="text-3xl font-black text-white uppercase italic">Roteiros para Vídeos de Vendas</h3>
-                    <p class="text-slate-400 mt-2 text-lg">Escolha o modelo e abra o teleprompter para gravar os seus conteúdos.</p>
+            <!-- Copiloto Gideão (Substituindo antigos roteiros) -->
+            <section id="gideao-prompts" class="space-y-8 pt-24 -mt-10">
+                <div class="border-b border-[#1a382a] pb-4 mb-8 text-center md:text-left">
+                    <h3 class="text-3xl font-black text-white uppercase italic flex items-center justify-center md:justify-start gap-3">
+                        <span class="text-4xl">🤖</span> Copiloto Gideão
+                    </h3>
+                    <p class="text-slate-400 mt-2 text-lg">O Gideão ajuda você a pensar melhor, comprar melhor e gerir melhor a sua loja. Escolha um dos comandos abaixo para ter conversas inteligentes com o seu gerente especialista.</p>
                 </div>
                 
-                <!-- FILTROS -->
-                <div class="flex flex-wrap gap-3 justify-center md:justify-start mb-6" id="scriptFilters">
-                    <button onclick="filterScripts('Todos')" class="filter-btn active bg-orange-600 text-white px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider transition-all">Todos</button>
-                    <button onclick="filterScripts('Urgência')" class="filter-btn bg-[#133325] hover:bg-[#1a382a] text-slate-300 border border-[#1a382a] px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all">🔥 Urgência</button>
-                    <button onclick="filterScripts('Hatch')" class="filter-btn bg-[#133325] hover:bg-[#1a382a] text-slate-300 border border-[#1a382a] px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all">Hatch</button>
-                    <button onclick="filterScripts('SUV')" class="filter-btn bg-[#133325] hover:bg-[#1a382a] text-slate-300 border border-[#1a382a] px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all">SUV</button>
-                    <button onclick="filterScripts('Sedan')" class="filter-btn bg-[#133325] hover:bg-[#1a382a] text-slate-300 border border-[#1a382a] px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all">Sedan</button>
-                    <button onclick="filterScripts('Pickup')" class="filter-btn bg-[#133325] hover:bg-[#1a382a] text-slate-300 border border-[#1a382a] px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all">Pickup</button>
-                </div>
-
-                <div id="allScriptsContainer" class="space-y-8"></div>
+                <div id="gideaoContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-8"></div>
             </section>
         </div>
 
@@ -551,7 +543,7 @@
         </div>
 
         <!-- ========================================== -->
-        <!-- TAB 4: INSTRUÇÕES E REFERÊNCIAS (NOVA ABA) -->
+        <!-- TAB 4: INSTRUÇÕES E REFERÊNCIAS            -->
         <!-- ========================================== -->
         <div id="tab-instrucoes" class="tab-content space-y-20">
             <section class="text-center max-w-4xl mx-auto py-6">
@@ -576,7 +568,7 @@
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Reels Embutidos (Usando iframe para não falhar o script externo) -->
+                    <!-- Reels Embutidos -->
                     <div class="bg-[#111827] border border-slate-700 rounded-3xl p-4 shadow-xl flex flex-col items-center hover:border-blue-500/50 transition duration-300">
                         <iframe src="https://www.instagram.com/reel/DWWEi5ADYsB/embed" width="100%" height="520" frameborder="0" scrolling="no" allowtransparency="true" class="rounded-xl w-full"></iframe>
                         <a href="https://www.instagram.com/reel/DWWEi5ADYsB/" target="_blank" class="mt-4 text-blue-400 hover:text-blue-300 text-sm font-bold flex items-center gap-2">🔗 Ver no Instagram</a>
@@ -921,215 +913,68 @@
         </span>
     </a>
 
-    <!-- Teleprompter Modal -->
-    <div id="teleprompterModal" class="fixed inset-0 bg-black z-[100] hidden flex flex-col">
-        <div class="flex justify-between items-center p-4 md:p-6 bg-[#050b08] border-b border-[#1a382a]">
-            <h3 class="text-white font-black uppercase italic tracking-wider text-sm md:text-base">Modo Teleprompter</h3>
-            
-            <!-- Controles do Teleprompter -->
-            <div class="flex items-center gap-2 md:gap-4">
-                <button onclick="changeFontSize(-0.2)" class="bg-[#133325] text-white px-3 py-1.5 rounded text-xs font-bold border border-[#1a382a] hover:bg-[#1a382a]">A-</button>
-                <button onclick="changeFontSize(0.2)" class="bg-[#133325] text-white px-3 py-1.5 rounded text-xs font-bold border border-[#1a382a] hover:bg-[#1a382a]">A+</button>
-                <div class="w-px h-6 bg-slate-700 mx-1"></div>
-                <button onclick="toggleTeleprompterScroll()" id="btnScrollTP" class="bg-blue-600 text-white px-4 py-1.5 rounded text-xs font-black uppercase tracking-wider hover:bg-blue-500 flex items-center gap-1 shadow-lg">
-                    ▶ Play
-                </button>
-                <div class="w-px h-6 bg-slate-700 mx-1"></div>
-                <button id="closeTeleprompter" class="text-slate-400 hover:text-white px-2 md:px-4 py-2 font-bold uppercase text-xs md:text-sm tracking-wider">Fechar [X]</button>
-            </div>
-        </div>
-        <div class="flex-1 overflow-y-auto p-4 md:p-8 flex flex-col items-center bg-[#020504] pb-40" id="tpScrollArea">
-            <div class="max-w-4xl text-center w-full mt-10 md:mt-20">
-                <p id="prompterText" class="teleprompter-text font-bold tracking-tight text-white whitespace-pre-wrap transition-all duration-300" style="font-size: 2.5rem; background: transparent;">Selecione um roteiro para visualizar aqui.</p>
-            </div>
-        </div>
-    </div>
-
     <!-- JavaScript Logic -->
     <script>
-        // ROTEIROS ALTAMENTE PERSONALIZADOS
-        const scriptsData = [
+        // COMANDOS DO GIDEÃO
+        const gideaoPrompts = [
             {
-                id: 1,
-                model: "Chevrolet Onix",
-                category: "standard",
-                tags: ["Economia", "Tecnologia", "Hatch"],
-                tip: "Comece filmando o farol/grade frontal e depois entre no carro mostrando o painel ligado.",
-                hooks: [
-                    { label: "Motoristas de App", text: "Atenção motorista de aplicativo de [Sua Cidade]! Se você roda o dia todo e o combustível está comendo o seu lucro, pare tudo e veja essa oportunidade." },
-                    { label: "Primeiro Carro", text: "Você de [Sua Cidade] que procura o primeiro carro completo, muito econômico e sem dor de cabeça, preste muita atenção neste vídeo." }
-                ],
-                body: "Sou [Seu Nome] aqui da [Nome da Loja], e separei este Chevrolet Onix impecável para o nosso 2º Mega Feirão G30. Ele tem central multimídia completíssima, direção super leve para o trânsito e um motor que parece não gastar nada. E o melhor: o Santander liberou uma condição surreal de aprovação apenas para esta unidade no Feirão.",
-                cta: "Não deixe que o seu concorrente de [Sua Cidade] leve este carro antes de você! Clica no link, chama a minha equipe no WhatsApp e garanta agora a sua entrada parcelada em até 24x na G30 Pay!"
+                category: "Marketing e Tráfego",
+                icon: "📈",
+                theme: "blue",
+                prompts: [
+                    "Analisa minha campanha de tráfego.",
+                    "Qual Campanha ATIVA está com melhor custo por lead?",
+                    "Esse anúncio está bom?",
+                    "Me dê ideias de criativos para Corolla.",
+                    "Crie uma copy para Instagram.",
+                    "Como gerar mais leads qualificados?",
+                    "Me sugira campanhas para giro rápido.",
+                    "Como melhorar meu CPL?",
+                    "Quais tendências de marketing estão funcionando para seminovos?"
+                ]
             },
             {
-                id: 2,
-                model: "Hyundai HB20",
-                category: "standard",
-                tags: ["Estilo", "Conforto", "Hatch"],
-                tip: "Mostre o design lateral do carro em um ângulo mais baixo e depois foque nos detalhes do banco e acabamento interno.",
-                hooks: [
-                    { label: "Jovens Profissionais", text: "Procurando um carro com estilo, conforto e mecânica blindada aqui em [Sua Cidade]? Vem comigo conferir essa exclusividade." },
-                    { label: "Design", text: "Se você não abre mão de um design marcante e quer impressionar por onde passa em [Sua Cidade], não pule este vídeo." }
-                ],
-                body: "Apresento o Hyundai HB20. Aqui na [Nome da Loja] este modelo sempre foi campeão de vendas! Ele tem linhas esportivas, acabamento premium que se destaca na categoria e não te deixa na mão. E por estarmos no 2º Mega Feirão G30, nós conseguimos uma taxa subsidiada pelo Santander que vai baixar o valor da sua parcela.",
-                cta: "Gostou do que viu? Então clica no link aqui embaixo, fala comigo e agenda já o seu horário vip no Feirão. Aproveite a entrada no cartão G30 Pay antes que acabe!"
+                category: "Compra de Carros",
+                icon: "🚘",
+                theme: "emerald",
+                prompts: [
+                    "Quais carros têm maior giro hoje?",
+                    "Quero comprar um COMPASS 2020 na Auto Avaliar.",
+                    "Me mostra oportunidades de compra na Auto Avaliar.",
+                    "Esse carro está bem precificado?",
+                    "Quais SUVs estão em alta na Auto Avaliar?"
+                ]
             },
             {
-                id: 3,
-                model: "Fiat Argo",
-                category: "standard",
-                tags: ["Espaço", "Robustez", "Hatch"],
-                tip: "Comece abrindo o porta-malas ou a porta traseira para mostrar o espaço, depois passe para a visão do motorista.",
-                hooks: [
-                    { label: "Família", text: "Você que é pai ou mãe de família aqui em [Sua Cidade] e precisa de um porta-malas de verdade e espaço para as crianças, fica nesse vídeo." },
-                    { label: "Robustez", text: "Procurando um carro valente para o dia a dia esburacado de [Sua Cidade], mas que seja extremamente confortável? Achei o carro certo." }
-                ],
-                body: "Dá uma olhada neste Fiat Argo que acabou de chegar na [Nome da Loja]. Um hatch valente, com suspensão perfeita para a nossa cidade, e um espaço traseiro que surpreende qualquer um. O mais incrível é que no 2º Mega Feirão G30, o Santander está a facilitar a aprovação deste carro como nunca vimos antes.",
-                cta: "Se esse é o parceiro que vai facilitar a rotina da sua família, clica agora no botão. Chama o [Seu Nome] ou a minha equipa e vamos fechar negócio com a entrada facilitada na G30 Pay!"
+                category: "$ Financeiro da Loja",
+                icon: "💰",
+                theme: "red",
+                prompts: [
+                    "Lançar gasto de martelinho no Civic.",
+                    "Quanto minha loja gastou hoje?",
+                    "Organize minhas despesas.",
+                    "Qual categoria estou gastando mais?",
+                    "Quanto investi em tráfego?",
+                    "Me ajude a controlar melhor o caixa.",
+                    "Esse gasto está alto para uma loja do meu porte?"
+                ]
             },
             {
-                id: 4,
-                model: "Renault Kwid",
-                category: "standard",
-                tags: ["Preço", "Agilidade", "Hatch"],
-                tip: "Mostre o carro estacionado em uma vaga um pouco mais apertada para provar a agilidade, depois mostre a altura do solo.",
-                hooks: [
-                    { label: "Estudantes", text: "Estudante ou recém-habilitado de [Sua Cidade] que quer pagar pouco, ter agilidade e um carro super econômico: esta é a sua chance." },
-                    { label: "Praticidade", text: "Cansado de sofrer para estacionar no centro de [Sua Cidade]? Pare tudo e conheça o rei da praticidade." }
-                ],
-                body: "Eu sou o [Seu Nome] da [Nome da Loja] e este é o Renault Kwid, o SUV dos compactos. Altura de solo excelente para não raspar em lado nenhum, consumo que parece de mota e cabe em qualquer vaga. E o preço? No nosso 2º Mega Feirão G30, ele ficou ainda mais acessível com as condições do Santander.",
-                cta: "Não perca tempo a andar de autocarro! Clica aqui embaixo, envia mensagem para nós e trazemos este Kwid para a sua garagem pagando a entrada em até 24x pela G30 Pay!"
-            },
-            {
-                id: 5,
-                model: "Volkswagen Polo",
-                category: "urgency",
-                tags: ["Design Premium", "Desempenho", "Hatch"],
-                tip: "Destaque o painel digital e o visual esportivo.",
-                hooks: [
-                    { label: "Tecnologia", text: "[Sua Cidade], chegou a hora de dar um upgrade na sua garagem. Se você gosta de tecnologia e desempenho, este vídeo é para si." },
-                    { label: "Oportunidade", text: "Amanhã vai ser tarde demais, quem é de [Sua Cidade] sabe! Carro premium com preço de Feirão evapora do stock." }
-                ],
-                body: "Aqui é [Seu Nome] da [Nome da Loja]. Dá uma vista de olhos neste Volkswagen Polo com painel 100% digital. Um carro com pegada premium que acabou de entrar no nosso 2º Mega Feirão G30. Com a taxa subsidiada pelo Santander que conseguimos hoje, a parcela vai ficar muito menor do que você imagina.",
-                cta: "Essa unidade exclusiva não vai dormir no nosso pátio! Clica no link agora, garante a sua aprovação e usa o teu cartão na G30 Pay para não perder este negócio!"
-            },
-            {
-                id: 6,
-                model: "Jeep Renegade",
-                category: "urgency",
-                tags: ["Status", "Aventura", "SUV"],
-                tip: "Mostre a grade frontal icônica e a altura de direção.",
-                hooks: [
-                    { label: "Status", text: "Sabe aquele sonho de andar de SUV por [Sua Cidade] que você vem adiando? A hora de realizar é agora no nosso Mega Feirão!" },
-                    { label: "Exclusividade", text: "Preste muita atenção: uma máquina destas não dura 24 horas no nosso showroom em [Sua Cidade]. Veja se é para si." }
-                ],
-                body: "Sou o [Seu Nome] da [Nome da Loja] e apresento a imponência do Jeep Renegade. O SUV mais desejado do Brasil, com acabamento impecável e posição de conduzir que impõe respeito. E no 2º Mega Feirão G30, a parceria com o Santander derrubou a barreira que o impedia de ter este carro na sua garagem.",
-                cta: "Quem pensa muito, fica sem SUV. Clica aqui embaixo agora, manda mensagem para a nossa equipa e vem fechar negócio dividindo a entrada na G30 Pay!"
-            },
-            {
-                id: 7,
-                model: "Fiat Strada",
-                category: "urgency",
-                tags: ["Trabalho", "Revenda", "Pickup"],
-                tip: "Destaque a caçamba e a versatilidade.",
-                hooks: [
-                    { label: "Empresários", text: "Empresário e trabalhador de [Sua Cidade], a sua nova ferramenta de trabalho chegou e está com condição especialíssima de Feirão!" },
-                    { label: "Rapidez", text: "Quem é do comércio em [Sua Cidade] sabe que carrinha boa com preço justo some no mesmo dia. Se piscar, já foi." }
-                ],
-                body: "Sou o [Seu Nome] da [Nome da Loja] e esta é a Fiat Strada, a líder absoluta. Caçamba espaçosa para a sua empresa e conforto de carro de passeio para a família. A revenda mais rápida do mercado. No 2º Mega Feirão G30, com o Santander, você investe no seu negócio com a parcela ideal.",
-                cta: "Você encontrou o seu parceiro de trabalho. Clica no botão aqui embaixo, fala connosco e garante este veículo com entrada facilitada em 24x pela G30 Pay antes do seu concorrente!"
-            },
-            {
-                id: 8,
-                model: "Chevrolet Tracker",
-                category: "urgency",
-                tags: ["Tecnologia", "Espaço", "SUV"],
-                tip: "Foque no teto solar e multimídia.",
-                hooks: [
-                    { label: "Família SUV", text: "Famílias de [Sua Cidade], querem conforto extremo, tecnologia e segurança para viajar? Segurem a emoção e vejam este SUV." },
-                    { label: "Unidade Única", text: "Eu tenho apenas UMA unidade com esta condição na [Nome da Loja]. Se é de [Sua Cidade] e quer um SUV premium, pare tudo." }
-                ],
-                body: "Este é o Chevrolet Tracker. Um design arrebatador aliado a um excelente consumo. Tem conectividade total e muito espaço. Ao comprar este carro no 2º Mega Feirão G30, o Santander garante uma aprovação rápida e nós garantimos a melhor retoma do mercado da nossa região.",
-                cta: "Não deixe esta oportunidade escapar. Clica agora no link abaixo, agenda com a [Nome da Loja] e venha dar uma volta. Use a G30 Pay e não se preocupe com a entrada!"
-            },
-            {
-                id: 9,
-                model: "Toyota Corolla",
-                category: "urgency",
-                tags: ["Luxo", "Confiabilidade", "Sedan"],
-                tip: "Filmagem clássica e estável, transmitindo elegância.",
-                hooks: [
-                    { label: "Sucesso", text: "Para quem chegou ao topo em [Sua Cidade] e não aceita menos que a perfeição. Conhece o ditado: quem conhece, não pensa muito." },
-                    { label: "Raridade", text: "Achar um carro com esta procedência aqui em [Sua Cidade] é como ganhar na lotaria. Olhe para este nível de conservação." }
-                ],
-                body: "Sou o [Seu Nome] da [Nome da Loja]. Este carro dispensa apresentações: Toyota Corolla. Sinónimo de luxo, conforto absurdo e mecânica inquebrável. É um carro para a vida. E durante o 2º Mega Feirão G30, conseguimos juntar este clássico às taxas mais baixas que o Santander tem para oferecer este ano.",
-                cta: "Um Corolla impecável voa do nosso stock. Clica aqui embaixo, fala agora com a nossa equipa e garante o teu parcelando a entrada em até 24x com a G30 Pay!"
-            },
-            {
-                id: 10,
-                model: "Volkswagen Gol",
-                category: "urgency",
-                tags: ["Manutenção", "Guerreiro", "Hatch"],
-                tip: "Simplicidade e robustez.",
-                hooks: [
-                    { label: "Trabalho Duro", text: "Batalhador de [Sua Cidade] que precisa de um carro que aguente o tranco diário sem pedir arrego. Fica comigo!" },
-                    { label: "Custo Baixo", text: "A oportunidade de sair de carro pagando muito pouco acabou de aparecer no seu ecrã aqui em [Sua Cidade]." }
-                ],
-                body: "Sou o [Seu Nome] da [Nome da Loja] e apresento-lhe o guerreiro do Brasil: Volkswagen Gol! Mecânica de extrema confiança, peças baratas e pau para toda a obra. Para completar, no 2º Mega Feirão G30, o Santander libertou o crédito para ele de forma inacreditável.",
-                cta: "O nosso Feirão está a encher e muita gente quer este Gol. Clica no link, chama-me no WhatsApp e aproveita a entrada em até 24x na G30 Pay para levá-lo hoje!"
-            },
-            {
-                id: 11,
-                model: "Nissan Kicks",
-                category: "urgency",
-                tags: ["Economia", "Tecnologia", "SUV"],
-                tip: "Destaque os bancos e câmeras.",
-                hooks: [
-                    { label: "Design Japonês", text: "Sabe aquele SUV que chama a atenção em qualquer rua de [Sua Cidade]? Ele está aqui, mas o cronómetro já está a contar." },
-                    { label: "Custo-Benefício", text: "Oportunidade de ter um SUV completão com um custo de manutenção que parece brincadeira. Venha ver isto." }
-                ],
-                body: "Aqui é [Seu Nome] da [Nome da Loja]. Este é o Nissan Kicks! Design japonês inconfundível, bancos ultra confortáveis e um consumo que envergonha a concorrência. No 2º Mega Feirão G30, com a parceria do Santander, garantimos a mensalidade perfeita para o seu bolso.",
-                cta: "Para garantir esta exclusividade, você precisa de agir. Clica no botão agora, fala comigo e vem buscar a tua chave dividindo a entrada em 24x pela G30 Pay!"
-            },
-            {
-                id: 12,
-                model: "Fiat Mobi",
-                category: "urgency",
-                tags: ["Urbano", "Economia", "Hatch"],
-                tip: "Mostre a facilidade de acesso.",
-                hooks: [
-                    { label: "Trânsito", text: "Cansado de sofrer no trânsito e nos transportes em [Sua Cidade]? A sua liberdade acabou de ficar muito mais barata." },
-                    { label: "Mensalidade Pequena", text: "O seu primeiro carro com uma parcela pequenina, graças ao nosso Feirão! Se quer economia, pare e assista." }
-                ],
-                body: "Eu sou o [Seu Nome] da [Nome da Loja]. Este é o Fiat Mobi. Compacto por fora para caber em todas as vagas de [Sua Cidade], e gigante na economia de combustível. Perfeito para fugir das boleias. Com o 2º Mega Feirão G30 e o crédito facilitado do Santander, ele já é praticamente seu.",
-                cta: "É a sua vez de acelerar com a [Nome da Loja]! Clica no link, chama-nos e resolvemos a sua entrada na G30 Pay agora mesmo!"
-            },
-            {
-                id: 13,
-                model: "Honda Civic",
-                category: "urgency",
-                tags: ["Esportividade", "Status", "Sedan"],
-                tip: "Ângulos agressivos e interior cockpit.",
-                hooks: [
-                    { label: "Exclusividade", text: "Quem gosta de carros exclusivos e potentes em [Sua Cidade] vai enlouquecer. Mas atenção: é a nossa ÚNICA unidade." },
-                    { label: "Sonho Realizado", text: "O sonho de consumo de [Sua Cidade] está na sua frente. Se demorar para mandar mensagem, outro leva." }
-                ],
-                body: "Sou o [Seu Nome] da [Nome da Loja] e veja a agressividade deste Honda Civic. Sedan com pegada desportiva, interior premium estilo cockpit e estabilidade invejável. Esta jóia entrou no 2º Mega Feirão G30 e o Santander preparou uma taxa especial que não vai encontrar noutro lado.",
-                cta: "Este não é um carro para quem tem dúvida. Clica no link abaixo agora, fala connosco e garante esta nave com entrada em 24x na G30 Pay!"
-            },
-            {
-                id: 14,
-                model: "Ford Ka",
-                category: "urgency",
-                tags: ["Custo-benefício", "Potência", "Hatch"],
-                tip: "Mostre o motor ou interior espaçoso.",
-                hooks: [
-                    { label: "Custo-Benefício", text: "O carro com o melhor custo-benefício de [Sua Cidade] acabou de entrar no nosso Feirão. Vai mesmo deixar passar?" },
-                    { label: "Primeiro Carro", text: "Oportunidade incrível para quem quer um carro ágil, potente e super completo. Venha ver os detalhes." }
-                ],
-                body: "Aqui na [Nome da Loja], este é sempre um dos primeiros a sair: Ford Ka! Motor super esperto para as subidas de [Sua Cidade], direção super leve e um espaço interno que surpreende. Para melhorar, no 2º Mega Feirão G30, aprovamos o seu crédito pelo Santander num piscar de olhos.",
-                cta: "Bateu o olho, gostou? Então clica no botão, fala com o [Seu Nome] ou com a equipa, e venha buscar o seu dividindo a entrada em 24x com a G30 Pay!"
+                category: "Inteligência para o Dono",
+                icon: "👑",
+                theme: "orange",
+                highlight: "Aqui mora o OURO",
+                prompts: [
+                    "Como vender mais esse mês?",
+                    "O que lojas lucrativas fazem diferente?",
+                    "Me dê uma estratégia para giro rápido.",
+                    "Como melhorar meu atendimento?",
+                    "Me ajude a montar uma campanha.",
+                    "Como aumentar ticket médio?",
+                    "Crie uma estratégia de pós-venda.",
+                    "Como reduzir estoque parado?",
+                    "Quais tendências do mercado automotivo devo acompanhar?"
+                ]
             }
         ];
 
@@ -1198,11 +1043,6 @@
             }
         }
 
-        // Variáveis do Teleprompter
-        let currentFontSize = 2.5;
-        let tpScrollInterval;
-        let isScrolling = false;
-
         function switchTab(tabId) {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             document.querySelectorAll('.tab-content').forEach(tab => {
@@ -1254,44 +1094,46 @@
             if(tabId === 'presales') mobileBtns[4].className = "bg-orange-600 text-white px-3 py-2 rounded-md text-[10px] font-bold uppercase shrink-0";
         }
 
-        // Função de Filtro dos Roteiros
-        function filterScripts(category) {
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('bg-orange-600', 'text-white');
-                btn.classList.add('bg-[#133325]', 'text-slate-300');
-                if (btn.innerText.includes(category)) {
-                    btn.classList.remove('bg-[#133325]', 'text-slate-300');
-                    btn.classList.add('bg-orange-600', 'text-white');
-                }
-            });
-            renderAllScripts(category);
-        }
-
-        function renderAllScripts(filter = 'Todos') {
-            const container = document.getElementById('allScriptsContainer');
+        function renderGideaoPrompts() {
+            const container = document.getElementById('gideaoContainer');
             if(!container) return;
             container.innerHTML = '';
             
-            let filteredScripts = scriptsData;
-            if (filter !== 'Todos') {
-                if (filter === 'Urgência') {
-                    filteredScripts = scriptsData.filter(car => car.category === 'urgency');
-                } else {
-                    filteredScripts = scriptsData.filter(car => car.tags.includes(filter));
-                }
-            }
+            gideaoPrompts.forEach(cat => {
+                let borderHover = "hover:border-slate-500/50";
+                let iconClass = "bg-slate-500/20 text-slate-400 border-slate-500/30";
+                let textHover = "hover:text-slate-400";
+                let btnBg = "bg-slate-800";
 
-            if (filteredScripts.length === 0) {
-                container.innerHTML = '<p class="text-slate-400 text-center py-10 italic">Nenhum roteiro encontrado para esta categoria.</p>';
-                return;
-            }
+                if (cat.theme === 'blue') { borderHover = "hover:border-blue-500/50"; iconClass = "bg-blue-500/20 text-blue-400 border-blue-500/30"; textHover = "hover:text-blue-400"; btnBg = "bg-blue-900/30 text-blue-400"; }
+                else if (cat.theme === 'emerald') { borderHover = "hover:border-emerald-500/50"; iconClass = "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"; textHover = "hover:text-emerald-400"; btnBg = "bg-emerald-900/30 text-emerald-400"; }
+                else if (cat.theme === 'red') { borderHover = "hover:border-red-500/50"; iconClass = "bg-red-500/20 text-red-400 border-red-500/30"; textHover = "hover:text-red-400"; btnBg = "bg-red-900/30 text-red-400"; }
+                else if (cat.theme === 'orange') { borderHover = "hover:border-orange-500/50"; iconClass = "bg-orange-500/20 text-orange-400 border-orange-500/30"; textHover = "hover:text-orange-400"; btnBg = "bg-orange-900/30 text-orange-400"; }
 
-            filteredScripts.forEach(car => {
-                const isUrgency = car.category === 'urgency';
-                const urgencyBadge = isUrgency ? '<span class="bg-orange-500/20 text-orange-400 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider md:ml-3 border border-orange-500/30 inline-block mt-2 md:mt-0">🔥 Urgência</span>' : '';
+                const highlightBadge = cat.highlight ? `<span class="bg-yellow-500/20 text-yellow-400 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded ml-2 border border-yellow-500/30 shadow-lg">${cat.highlight}</span>` : '';
+                
+                let promptsHtml = cat.prompts.map(p => `
+                    <div class="flex items-start justify-between gap-3 p-3 bg-[#050b08] border border-[#1a382a] rounded-lg transition group ${borderHover}">
+                        <p class="text-slate-300 text-sm font-medium w-full">"${p}"</p>
+                        <button onclick="copySpecificText(this, '${p.replace(/'/g, "\\'")}')" class="shrink-0 px-2 py-1 text-[10px] font-bold uppercase rounded transition ${btnBg} hover:opacity-80 flex items-center gap-1" title="Copiar Comando">
+                            <span>Copiar</span>
+                        </button>
+                    </div>
+                `).join('');
+
                 const card = document.createElement('div');
-                card.className = 'bg-[#0a1812] rounded-2xl shadow-xl border border-[#1a382a] overflow-hidden';
-                card.innerHTML = `<div class="bg-[#050b08] p-6 border-b border-[#1a382a] flex flex-col md:flex-row md:items-center justify-between gap-4"><div><h4 class="text-2xl font-black text-white flex flex-col md:flex-row md:items-center italic tracking-tight">🚘 ${car.model} ${urgencyBadge}</h4><div class="flex flex-wrap gap-2 mt-3">${car.tags.map(tag => `<span class="bg-[#133325] border border-[#1a382a] text-slate-300 text-xs px-3 py-1 rounded-full font-bold shadow-sm">${tag}</span>`).join('')}</div></div><div class="bg-emerald-900/20 text-emerald-400 text-sm p-4 rounded-lg border border-emerald-800/40 flex-1 md:max-w-md"><strong class="text-emerald-300">🎥 Dica:</strong> <br/> ${car.tip}</div></div><div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8"><div class="space-y-4"><div class="flex items-center justify-between"><h5 class="font-black text-slate-400 uppercase text-xs bg-[#133325] px-3 py-1.5 rounded border border-[#1a382a]">Opção 1: ${car.hooks[0].label}</h5><button onclick="openTeleprompter(${car.id}, 0)" class="text-xs font-bold uppercase bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-500 transition shadow-lg flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg> Abrir TP</button></div><div class="border-l-4 border-slate-600 pl-4 space-y-3"><p class="text-white text-lg font-medium"><strong>[Gancho]</strong> ${car.hooks[0].text}</p><p class="text-slate-400"><strong>[Corpo]</strong> ${car.body}</p><p class="text-white"><strong>[Chamada]</strong> <span class="text-orange-400 font-bold">${car.cta}</span></p></div></div><div class="space-y-4"><div class="flex items-center justify-between"><h5 class="font-black text-slate-400 uppercase text-xs bg-[#133325] px-3 py-1.5 rounded border border-[#1a382a]">Opção 2: ${car.hooks[1].label}</h5><button onclick="openTeleprompter(${car.id}, 1)" class="text-xs font-bold uppercase bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-500 transition shadow-lg flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg> Abrir TP</button></div><div class="border-l-4 border-slate-600 pl-4 space-y-3"><p class="text-white text-lg font-medium"><strong>[Gancho]</strong> ${car.hooks[1].text}</p><p class="text-slate-400"><strong>[Corpo]</strong> ${car.body}</p><p class="text-white"><strong>[Chamada]</strong> <span class="text-orange-400 font-bold">${car.cta}</span></p></div></div></div>`;
+                card.className = `bg-[#0a1812] rounded-2xl shadow-xl border border-slate-800 overflow-hidden flex flex-col h-full transition-colors ${borderHover}`;
+                card.innerHTML = `
+                    <div class="bg-[#111827] p-5 border-b border-slate-700 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-full flex items-center justify-center text-2xl shrink-0 border ${iconClass}">${cat.icon}</div>
+                            <h4 class="text-lg md:text-xl font-black text-white uppercase tracking-tight flex flex-wrap items-center gap-2">${cat.category} ${highlightBadge}</h4>
+                        </div>
+                    </div>
+                    <div class="p-5 space-y-3 flex-1 bg-gradient-to-b from-[#0a1812] to-[#050b08]">
+                        ${promptsHtml}
+                    </div>
+                `;
                 container.appendChild(card);
             });
         }
@@ -1308,49 +1150,7 @@
             });
         }
 
-        function openTeleprompter(carId, hookIndex) {
-            const car = scriptsData.find(c => c.id === carId);
-            if (!car) return;
-            const fullText = `[Gancho]\n${car.hooks[hookIndex].text}\n\n[Corpo]\n${car.body}\n\n[Chamada]\n${car.cta}\n\n\n\n\n(Fim do Script)`;
-            document.getElementById('prompterText').innerText = fullText;
-            document.getElementById('teleprompterModal').classList.remove('hidden');
-            
-            // Reset scroll state
-            document.getElementById('tpScrollArea').scrollTop = 0;
-            if(isScrolling) toggleTeleprompterScroll(); // force pause
-        }
-
-        // NOVAS FUNÇÕES DO TELEPROMPTER
-        function changeFontSize(amount) {
-            currentFontSize += amount;
-            if (currentFontSize < 1.5) currentFontSize = 1.5;
-            if (currentFontSize > 5) currentFontSize = 5;
-            document.getElementById('prompterText').style.fontSize = currentFontSize + 'rem';
-        }
-
-        function toggleTeleprompterScroll() {
-            const btn = document.getElementById('btnScrollTP');
-            const scrollArea = document.getElementById('tpScrollArea');
-            
-            if (isScrolling) {
-                clearInterval(tpScrollInterval);
-                isScrolling = false;
-                btn.innerHTML = '▶ Play';
-                btn.classList.replace('bg-red-600', 'bg-blue-600');
-                btn.classList.replace('hover:bg-red-500', 'hover:bg-blue-500');
-            } else {
-                isScrolling = true;
-                btn.innerHTML = '⏸ Pause';
-                btn.classList.replace('bg-blue-600', 'bg-red-600');
-                btn.classList.replace('hover:bg-blue-500', 'hover:bg-red-500');
-                
-                tpScrollInterval = setInterval(() => {
-                    scrollArea.scrollTop += 1.5; // Velocidade do scroll
-                }, 30);
-            }
-        }
-
-        function copySpecificText(btn, textToCopy, isLargeBtn = false) {
+        function copySpecificText(btn, textToCopy) {
             const textarea = document.createElement('textarea');
             textarea.value = textToCopy;
             document.body.appendChild(textarea);
@@ -1365,12 +1165,8 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            renderAllScripts('Todos');
+            renderGideaoPrompts();
             renderMapMessages();
-            document.getElementById('closeTeleprompter').addEventListener('click', () => { 
-                document.getElementById('teleprompterModal').classList.add('hidden'); 
-                if(isScrolling) toggleTeleprompterScroll(); // Pause on close
-            });
         });
     </script>
 </body>
